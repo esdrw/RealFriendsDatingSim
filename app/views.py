@@ -95,6 +95,7 @@ def gen_babble():
 @app.route('/birthday', methods=['GET'])
 @login_required
 def get_birthday():
+    print session['friend']['birthday']
     return jsonify(birthday=session['friend']['birthday'])
 
 
