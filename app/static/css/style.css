@@ -71,6 +71,9 @@ ul {
   height: 40px;
   max-width: 100px;
   padding: 0 20px;
+
+  color: white;
+  opacity: 1;
 }
 
 .transparent-box {
@@ -95,3 +98,11 @@ ul {
   color: black;
 }
 
+#dialogue-box li {
+  font-style: italic; 
+}
+
+#dialogue-box li:hover {
+  font-weight: bold;
+  letter-spacing: 0.1em;
+}
