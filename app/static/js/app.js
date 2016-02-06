@@ -45,13 +45,13 @@ $(document).ready(function() {
   loadDialogue();
 
   $.ajax({
-    url: '/friend',
+    url: '/posts',
     type: 'GET',
     success: function(json) {
       console.log(json);
     },
     error: function(xhr, status, error) {
-      console.log("error getting friend!", error);
+      console.log("error getting posts!", error);
     }
   })
 

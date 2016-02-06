@@ -19,8 +19,13 @@ def index():
                                app_name=FB_APP_NAME, user=user)
 
     # Otherwise, a user is not logged in.
-    return render_template('login.html', app_id=FB_APP_ID, name=FB_APP_NAME)
+    return redirect(url_for('login'))
 
+
+@app.route('/login')
+def login():
+    """Log in user on Facebook."""
+    return render_template('login.html', app_id=FB_APP_ID, name=FB_APP_NAME)
 
 @app.route('/logout')
 def logout():
@@ -34,18 +39,46 @@ def logout():
     return redirect(url_for('index'))
 
 
-@app.route('/friend', methods=['GET'])
-def get_friend():
+@app.route('/date/<friendId>', methods=['GET'])
+def date_friend(friendId=None):
     """ Return a json of a random friend's data."""
-    access_token = session.get('access_token', None)
+    user = session.get('user')
 
     # If there is no result, we assume the user is not logged in.
+    if not user:
+        return redirect(url_for('login'))
+
+    session['friend'] = friendId
+    # TODO: render actual dating page
+    return render_template('index.html', app_id=FB_APP_ID,
+                           app_name=FB_APP_NAME, user=user)
+
+
+@app.route('/posts', methods=['GET'])
+def get_statuses():
+    access_token = session.get('access_token', None)
+    if not access_token:
+        return jsonify(posts=None)
+
+    graph = GraphAPI(access_token)
+    friendId = session['friend']
+    posts = graph.get_connections(id=friendId, connection_name='posts')
+    return jsonify(posts=posts)
+
+
+@app.route('/friends', methods=['GET'])
+def get_friends():
+    access_token = session.get('access_token', None)
     if not access_token:
         return jsonify(friends=None)
 
     graph = GraphAPI(access_token)
     friends = graph.get_connections(id='me', connection_name='friends')
-    return jsonify(friends=friends)
+    if not friends.data:
+        # you have no friends :(
+        return jsonify(friends=None)
+
+    return jsonify(friends=friends.data)
 
 @app.before_request
 def get_current_user():
