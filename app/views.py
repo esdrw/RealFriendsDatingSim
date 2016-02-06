@@ -60,11 +60,11 @@ def date_friend(friendId=None):
 
     try:
         graph = GraphAPI(access_token)
+        profile = graph.get_object(friendId)
     except GraphAPIError as e:
         # If something went wrong with token, redirect to login
         return redirect(url_for('login'))
 
-    profile = graph.get_object(friendId)
     friend = profileToDict(profile)
 
     session['friend'] = friend
@@ -83,11 +83,10 @@ def gen_babble():
 
     try:
         graph = GraphAPI(access_token)
+        friendId = session['friend']['id']
+        posts = graph.get_connections(id=friendId, connection_name='posts', limit=REQUEST_LIMIT)
     except GraphAPIError as e:
         return jsonify(babble=None, error=e)
-
-    friendId = session['friend']['id']
-    posts = graph.get_connections(id=friendId, connection_name='posts', limit=REQUEST_LIMIT)
 
     dialogue = babble_posts(posts)
     return jsonify(babble=dialogue)
@@ -108,15 +107,15 @@ def get_friends():
 
     try:
         graph = GraphAPI(access_token)
+        friends = graph.get_connections(id='me', connection_name='friends')
     except GraphAPIError as e:
         return jsonify(friends=None, error=e)
 
-    friends = graph.get_connections(id='me', connection_name='friends')
-    if not friends.data:
+    if not friends['data']:
         # you have no friends :(
         return jsonify(friends=None)
 
-    return jsonify(friends=friends.data)
+    return jsonify(friends=friends['data'])
 
 
 def babble_posts(posts):

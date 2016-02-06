@@ -15,7 +15,10 @@
     ['But I\'m already taken', 0.2],
     ['What was that?', 0.3],
     ['Of course. I understand.', 0.8],
-    ['Wait!', 0.7]
+    ['Wait!', 0.7],
+    ['Since I\'ve set my eyes on you, I\'ve always known.', 0.8],
+    ['I\'ve only used 0.01\% of my charm!', 0.5],
+    ['I got lost in your eyes.', 0.8]
   ]
 
   var intro = 'It\'s an unusually nice day at Carnegie Mellon University. You\'ve just finished your classes and are ready to head home when you hear the quiet sound of footsteps.';
@@ -37,27 +40,27 @@
       case 0:
         hideName();
         hidePhoto();
-        loadDialogue(intro, ['...' + firstName + '? Is that you?']);
+        loadDialogue(intro, [['...' + firstName + '? Is that you?', 0]]);
         break;
-      
-      case 1:  
+
+      case 1:
         showName(friendName);
         showPhoto();
-        loadDialogue(dia1, ['What?']);
+        loadDialogue(dia1, [['What?', 0]]);
         break;
 
       case 5:
         $.get('/birthday', function (data) {
           console.log(data['birthday']);
           if (data['birthday']) {
-            loadDialogue(dia2, ['Of course. It\'s ' + birthday]);
+            loadDialogue(dia2, [['Of course. It\'s ' + birthday, 1.0]]);
           } else {
             babble();
           }
         });
         break;
-      
-      case 10:  
+
+      case 10:
         if (affection >= 80) {
           loadDialogue(diaGoodEnd, []);
         } else {
@@ -71,7 +74,6 @@
   }
 
   function selectChoice(prob) {
-    console.log('clicked');
     updateAffection(prob);
     clearDialogue();
     progress++;
@@ -90,33 +92,34 @@
 
   function showPhoto() {
     $('#photo').show();
+    $('#affection').show();
   }
 
   function hidePhoto() {
     $('#photo').hide();
+    $('#affection').hide();
   }
 
   var intervalId;
   function updateAffection(prob) {
-    if (progress == 0) {
-      return;
-    }
-    var incr = Math.random() * 0.5;
-    if (affection > incr && Math.random() > prob) {
-      incr = incr * -1;
-      affection += incr;
-    } else if (affection + incr >= 1.0) {
-      gameOver = true;
-      affection = 1.0;
+    var incr = Math.random() * 0.7;
+    if (Math.random() > prob.data.prob) {
+      if (affection > incr) {
+        incr = incr * -1;
+        affection += incr;
+      }
     } else {
       affection += incr;
-    }
+      if (affection > 1.0) {
+        gameOver = true;
+        affection = 1.0;
+      }
+    }     
     var width = $('#affection').width();
     var newWidth = Math.floor(width * affection);
     $('#bar').animate({
       width: newWidth + 'px'
     })
-    console.log(affection);
   }
 
   function clearDialogue() {
@@ -132,7 +135,7 @@
     for (var i = 4; i < responses.length; i++) {
       var rand = Math.floor(Math.random() * i);
       if (rand < 4) {
-        curr[rand] = responses[i][0];
+        curr[rand] = responses[i];
       }
     }
     return curr;
@@ -144,7 +147,7 @@
       var li = $('<li/>').appendTo(responseList);
       var ahref = $('<a/>')
         .on('click', { prob: replies[i][1] }, selectChoice)
-        .text(replies[0][i])
+        .text(replies[i][0])
         .appendTo(li);
       });
     $('#dialogue-box').append(responseList);
@@ -162,7 +165,6 @@
   }
     
   function babble() {
-    console.log('loading dialogue');
     $.get('/babble', function (data) {
       loadDialogue(data['babble'], chooseResponses());
     });

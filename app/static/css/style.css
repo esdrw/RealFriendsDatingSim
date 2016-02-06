@@ -64,6 +64,12 @@ ul {
   border-style: groove;
   border-color: #ff3399;
   border-width: 30px;
+
+  -webkit-touch-callout: none; /* iOS Safari */
+  -webkit-user-select: none;   /* Chrome/Safari/Opera */
+  -khtml-user-select: none;    /* Konqueror */
+  -moz-user-select: none;      /* Firefox */
+  -ms-user-select: none;       /* IE/Edge */
 }
 
 #name-box {
@@ -100,10 +106,28 @@ ul {
 }
 
 #dialogue-box li {
-  font-style: italic; 
+  font-style: italic;
 }
 
 #dialogue-box li:hover {
+  cursor: pointer;
   font-weight: bold;
   letter-spacing: 0.1em;
+}
+
+#friends {
+  margin-top: 10px;
+}
+
+#friends li {
+  display: inline-block;
+  vertical-align: middle;
+  height: 100px;
+  width: 25%;
+}
+
+#friends li img {
+  border-radius: 30px;
+  min-width: 60px;
+  min-height: 60px;
 }

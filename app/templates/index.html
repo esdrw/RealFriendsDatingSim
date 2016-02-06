@@ -16,8 +16,18 @@
     <div class="black-box">
       <p>Your dating sim can be found at:</p>
       <pre>{{root_url}}date/{{ user['id'] }}</pre>
-      <p>Share it with your friends!</p>
 
+      <p>Share it with your friends!</p>
+      <div class="fb-share-button" data-href="{{root_url}}date/{{ user['id'] }}" data-layout="button"></div>
+
+      <div id="friends-box" style="display:none;">
+        <br/>
+        <p>Or, date one of your friends below:</p>
+        <ul id="friends">
+        </ul>
+      </div>
+
+      <br/>
       <a href="/logout" id="logout">Log out</a>
     </div>
 
@@ -26,5 +36,8 @@
             FB.logout(function(response) { });
         };
     </script>
+
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.2.0/jquery.min.js"></script>
+    <script src="/static/js/landing.js"></script>
 </div>
 {% endblock %}
