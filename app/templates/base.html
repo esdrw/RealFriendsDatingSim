@@ -10,7 +10,6 @@
     <meta property="fb:app_id" content="{{ app_id }}" />
 
     <title>Kawaii Tomodachi-desu</title>
-    <title>{{ app_name }}</title>
 
     <!-- Style -->
     <link rel="stylesheet" type="text/css" href="/static/css/style.css">
@@ -31,7 +30,8 @@
                 appId      : '{{ app_id }}',
                 status     : true,
                 cookie     : true,
-                xfbml      : true
+                xfbml      : true,
+                version    : 'v2.5'
             });
 
             FB.Event.subscribe('auth.login', function(response) {

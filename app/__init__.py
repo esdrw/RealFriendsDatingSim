@@ -4,11 +4,11 @@ import os
 
 
 app = Flask(__name__)
-
-from app import views
+app.secret_key = 'bakanekotsunderedesu'
 
 if 'HEROKU' in os.environ: # Production mode
     sslify = SSLify(app) # redirect to SSL
 else:
     app.debug = True
 
+from app import views
