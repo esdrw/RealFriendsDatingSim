@@ -15,8 +15,8 @@
 
     <div class="black-box">
       <p>Your dating sim can be found at:</p>
-      <a href="{{root_url}}date/{{ user['id'] }}">{{root_url}}date/{{ user['id'] }}</a>
-      <p>Share it with your friends!</p>
+      <pre>{{root_url}}date/{{ user['id'] }}</pre>
+      <a id="share" href="#" data-share-link="{{root_url}}date/{{ user['id'] }}">Share it with your friends!</a>
 
       <div id="friends-box" style="display:none;">
         <br/>
