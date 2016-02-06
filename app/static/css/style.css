@@ -5,11 +5,13 @@
 
 h1, h2, h3, h4, h5, h6 {
   font-family: Prime, sans-serif;
+  text-shadow: 1px 1px black;
 }
 
 body {
+  height: 100%;
   font-family: 'Droid Sans Mono', 'Courier New', monospace;
-  background-color: #202024;
+  background-color: #ffb6c1;
   font-size: 14px;
   color: white;
 }
@@ -28,5 +30,27 @@ ul {
   width: 200px;
   height: 200px;
   border-radius: 100px;
+}
+
+#dialogue-box {
+  margin: auto;
+  padding: 20px;
+  max-width: 700px;
+  min-height: 100px;
+  background-color: #000;
+  border: 1px solid black;
+  opacity: 0.6;
+  filter: alpha(opacity=60); /* For IE8 and earlier */
+}
+
+.black-box {
+  margin: auto;
+  padding: 20px;
+  width: 500px;
+  border: 1px solid black;
+  color: black;
+}
+
+#dialogue {
 }
 

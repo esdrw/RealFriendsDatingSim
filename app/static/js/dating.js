@@ -40,7 +40,15 @@
     });
   }
 
+  function updateBackground() {
+    var height = $(window).height();
+    $('body').css('background-image', 'url(/static/images/school.jpg)');
+    $('body').css('background-size', 'cover');
+    $('body').height(height);
+  }
+
   $(document).ready(function() {
+    updateBackground();
     loadDialogue();
   });
 })();
