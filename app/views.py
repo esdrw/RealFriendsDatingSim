@@ -67,8 +67,8 @@ def date_friend(friendId=None):
                            friend=friend)
 
 
-@app.route('/posts', methods=['GET'])
-def get_dialogue():
+@app.route('/babble', methods=['GET'])
+def gen_babble():
     access_token = session.get('access_token', None)
     if not access_token:
         return jsonify(dialogue=None)
@@ -82,8 +82,8 @@ def get_dialogue():
     posts = graph.get_connections(id=friendId, connection_name='posts')
 
     dialogue = babble_posts(posts)
-    return jsonify(dialogue=dialogue)
-
+    # TODO: generate responses for you
+    return jsonify(them=dialogue, you=['Hello', 'Hi', 'Hey', 'Yo'])
 
 @app.route('/friends', methods=['GET'])
 def get_friends():
@@ -152,7 +152,3 @@ def profileToDict(profile):
     return dict(name=profile['name'],
                 profile_url=profile['link'],
                 id=str(profile['id']))
-
-@app.route('/babble', methods=['GET'])
-def gen_babble():
-    return jsonify(them='Hello', you=['Hello', 'Hi', 'Hey', 'Yo'])

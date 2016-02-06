@@ -14,20 +14,18 @@
       incr = incr * -1;
     }
     affection += incr;
-    console.log(affection)
+    console.log(affection);
   }
 
   function clearDialogue() {
-    $('#themWords').remove();
+    $('#dialogue').text('');
     $('ul').remove();
   }
 
   function loadDialogue() {
     $.get('/babble', function (data) {
-      var themWords = $('<p>')
-        .attr('id', 'themWords')
-        .text(data['them']);
-      $('#mainDiv').append('<p>' + data['them'] + '</p>');
+      // TODO: make text appear one at a time: typed.js
+      $('#dialogue').text(data['them']);
       responseList = $('<ul>');
       $.each(data['you'], function(i) {
         // TODO: replace existing list on page
@@ -38,7 +36,7 @@
           .text(data['you'][i])
           .appendTo(li);
         });
-      $('#mainDiv').append(responseList)
+      $('#dialogue-box').append(responseList);
     });
   }
 
