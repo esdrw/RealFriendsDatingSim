@@ -1,6 +1,6 @@
 {% extends "base.html" %}
 {% block content %}
-<div class="center">
+<div class="center" id="mainDiv">
     <div class="header">
       <h1>Kawaii Tomodachi-desu</h1>
       <h4>Real Friend Dating Sim</h4>
@@ -17,6 +17,12 @@
             FB.logout(function(response) { });
         };
     </script>
+
+    <!-- <ul>
+    {% for resp in responses %}
+        <li><a href="">{{ resp }}</a></li>
+    {% endfor %}
+    </ul> -->
 
     <script src="/static/js/jquery/jquery-2.1.0.min.js"></script>
     <script src="/static/js/app.js"></script>
