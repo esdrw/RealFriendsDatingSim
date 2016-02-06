@@ -1,5 +1,6 @@
 (function() {
   var firstName = friendName.substring(0, friendName.indexOf(' '));
+  var userFirstName = userName.substring(0, userName.indexOf(' '));
 
   var responses = [
     'Will you marry me?', 
@@ -18,8 +19,9 @@
   var intro = 'It\'s an unusually nice day at Carnegie Mellon University. You\'ve just finished your classes and are ready to head home when you hear the quiet sound of footsteps.';
   var dia1 = 'Oh...it\'s good to see you. I have a secret, something I\'ve been meaning to tell you. You see...';
   var dia2 = 'W-wait, even after all these years...you still remember my birthday?'
-  var diaGoodEnd = 'Thanks ' + firstName + '...You know, ever since that time...I\'ve always liked you...';
-  var diaBadEnd = 'Thanks ' + firstName + '. I\'m so happy for all the time we\'ve spent together...as good friends.'
+  var theEnd = 'THE END.'
+  var diaGoodEnd = 'Thanks ' + userFirstName + '...You know, ever since that time...I\'ve always liked you...\n' + theEnd;
+  var diaBadEnd = 'Thanks ' + userFirstName + '. I\'m so happy for all the time we\'ve spent together...as good friends.\n' + theEnd;
 
   var affection = 0.0;
   var progress = 0;
@@ -32,7 +34,7 @@
         loadDialogue(intro, ['...' + firstName + '? Is that you?']);
         break;
       
-      case 1:  
+      case 10:  
         showName(friendName);
         showPhoto();
         loadDialogue(dia1, ['What?']);
@@ -48,13 +50,12 @@
         });
         break;
       
-      case 10:  
+      case 1:  
         if (affection >= 80) {
           loadDialogue(diaGoodEnd, []);
         } else {
           loadDialogue(diaBadEnd, []);
         }
-        $('#the-end').show();
         break;
 
       default:
