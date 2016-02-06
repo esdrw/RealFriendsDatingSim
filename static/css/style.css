@@ -1,0 +1,16 @@
+@font-face {
+  font-family: Prime;
+  src: url('../fonts/prime.otf');
+}
+
+h1, h2, h3, h4, h5, h6 {
+  font-family: Prime, sans-serif;
+}
+
+body {
+  font-family: 'Droid Sans Mono', 'Courier New', monospace;
+  background-color: #202024;
+  font-size: 14px;
+  color: white;
+}
+
