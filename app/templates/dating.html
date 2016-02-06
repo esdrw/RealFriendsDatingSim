@@ -7,8 +7,8 @@
     </div>
 
     <div id="photo">
-      <span class="anime-torso" />
-      <p class="circle-image"
+      <span class="anime-torso {{'anime-guy' if friend['gender'] == 'male' else 'anime-girl'}}" />
+      <p class="circle-image circle-image-head"
          style="background-image: url(https://graph.facebook.com/{{ friend['id'] }}/picture?type=large);">
       </p>
     </div>

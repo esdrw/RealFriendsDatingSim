@@ -34,26 +34,38 @@ ul {
 }
 
 #photo {
+  display: none;
   position: absolute;
+  left: 20%;
 }
 
 .circle-image {
   width: 200px;
   height: 200px;
   border-radius: 100px;
+}
+
+.circle-image-head {
   position: absolute;
   left: 25px;
   top: -175px;
 }
 
 .anime-torso {
-  background-image: url(/static/images/anime_girl_torso.png);
   background-repeat: no-repeat;
   background-size: contain;
   position: absolute;
   width: 240px;
   height: 400px;
   margin-top: 160px;
+}
+
+.anime-girl {
+  background-image: url(/static/images/anime_girl_torso.png);
+}
+
+.anime-guy {
+  background-image: url(/static/images/anime_guy_torso.png);
 }
 
 #affection {
