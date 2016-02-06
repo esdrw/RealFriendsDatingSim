@@ -22,15 +22,5 @@
 
   $(document).ready(function() {
     findFriends();
-
-    var shareButton = $('#share');
-    shareButton.click(function(e) {
-      e.preventDefault();
-      var shareLink = shareButton.data('shareLink');
-      FB.ui({
-        method: 'share',
-        href: shareLink,
-      }, function(response){});
-    });
   });
 })();
