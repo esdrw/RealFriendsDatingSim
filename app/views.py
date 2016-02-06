@@ -1,5 +1,5 @@
 from facebook import get_user_from_cookie, GraphAPI
-from flask import g, render_template, redirect, request, session, url_for
+from flask import g, jsonify, render_template, redirect, request, session, url_for
 
 from app import app
 
@@ -34,6 +34,19 @@ def logout():
     return redirect(url_for('index'))
 
 
+@app.route('/friend', methods=['GET'])
+def get_friend():
+    """ Return a json of a random friend's data."""
+    access_token = session.get('access_token', None)
+
+    # If there is no result, we assume the user is not logged in.
+    if not access_token:
+        return jsonify(friends=None)
+
+    graph = GraphAPI(access_token)
+    friends = graph.get_connections(id='me', connection_name='friends')
+    return jsonify(friends=friends)
+
 @app.before_request
 def get_current_user():
     """Set g.user to the currently logged in user.
@@ -67,6 +80,7 @@ def get_current_user():
         # Add the user to the current session
         session['user'] = dict(name=profile['name'], profile_url=profile['link'],
                                id=str(profile['id']), access_token=result['access_token'])
+        session['access_token'] = result['access_token']
 
     # Set the user as a global g.user
     g.user = session.get('user', None)
