@@ -50,6 +50,12 @@ def date_friend(friendId=None):
     if not user:
         return redirect(url_for('login'))
 
+    try:
+        graph = GraphAPI(access_token)
+    except GraphAPIError as e:
+        # If something went wrong with token, redirect to login
+        return redirect(url_for('login'))
+
     graph = GraphAPI(access_token)
     profile = graph.get_object(friendId)
     friend = profileToDict(profile)
@@ -67,7 +73,11 @@ def get_dialogue():
     if not access_token:
         return jsonify(dialogue=None)
 
-    graph = GraphAPI(access_token)
+    try:
+        graph = GraphAPI(access_token)
+    except GraphAPIError as e:
+        return jsonify(dialogue=None, error=e)
+
     friendId = session['friend']
     posts = graph.get_connections(id=friendId, connection_name='posts')
 
@@ -81,7 +91,11 @@ def get_friends():
     if not access_token:
         return jsonify(friends=None)
 
-    graph = GraphAPI(access_token)
+    try:
+        graph = GraphAPI(access_token)
+    except GraphAPIError as e:
+        return jsonify(friends=None, error=e)
+
     friends = graph.get_connections(id='me', connection_name='friends')
     if not friends.data:
         # you have no friends :(
@@ -119,7 +133,10 @@ def get_current_user():
     # If there is no result, we assume the user is not logged in.
     if result:
         # Not an existing user so get info
-        graph = GraphAPI(result['access_token'])
+        try:
+            graph = GraphAPI(result['access_token'])
+        except GraphAPIError:
+            return
         profile = graph.get_object('me')
 
         # Add the user to the current session
@@ -135,3 +152,7 @@ def profileToDict(profile):
     return dict(name=profile['name'],
                 profile_url=profile['link'],
                 id=str(profile['id']))
+
+@app.route('/babble', methods=['GET'])
+def gen_babble():
+    return jsonify(them='Hello', you=['Hello', 'Hi', 'Hey', 'Yo'])
