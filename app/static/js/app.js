@@ -1,13 +1,48 @@
+var selectChoice = function () {
+  console.log('clicked');
+  updateAffection();
+  clearDialogue();
+  loadDialogue();
+  return false;
+}
+
+var affection = 0.0;
+function updateAffection() {
+  var incr = Math.random();
+  if (affection > incr && Math.floor(Math.random() * 2) == 0) {
+    incr = incr * -1;
+  }
+  affection += incr;
+  console.log(affection)
+}
+
+function clearDialogue() {
+  $('#themWords').remove();
+  $('ul').remove();
+}
+
+function loadDialogue() {
+  $.get('/babble', function (data) {
+    var themWords = $('<p>')
+      .attr('id', 'themWords')
+      .text(data['them']);
+    $('#mainDiv').append('<p>' + data['them'] + '</p>');
+    responseList = $('<ul>');
+    $.each(data['you'], function(i) {
+      // TODO: replace existing list on page
+      // console.log(data['you'][i])
+      var li = $('<li/>').appendTo(responseList);
+      var ahref = $('<a/>')
+        .on('click', selectChoice)
+        .text(data['you'][i])
+        .appendTo(li);
+      });
+    $('#mainDiv').append(responseList)
+  });
+}
+
 $(document).ready(function() {
-    // expected format: { them: <character speech>, you: [<response option 1>, <opt 2>, ...]}
-    $.get('ajax/babble', function (data) {
-    $('#mainDiv').append('<p>' + data['them'] + '</p>')
-    $('#mainDiv').append('<ul>')
-    // TODO: replace existing list
-    for (var i = 0; i < data['you'].length; i++) {
-        $('#mainDiv').append('<li><a href="#" onclick="selectChoice()>' 
-            + data['you'][i] + '</a></li>')
-    }
+  loadDialogue();
 
   $.ajax({
     url: '/friend',
@@ -18,6 +53,6 @@ $(document).ready(function() {
     error: function(xhr, status, error) {
       console.log("error getting friend!", error);
     }
-  });
+  })
 
 });

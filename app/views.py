@@ -84,3 +84,7 @@ def get_current_user():
 
     # Set the user as a global g.user
     g.user = session.get('user', None)
+
+@app.route('/babble', methods=['GET'])
+def gen_babble():
+    return jsonify(them='Hello', you=['Hello', 'Hi', 'Hey', 'Yo'])

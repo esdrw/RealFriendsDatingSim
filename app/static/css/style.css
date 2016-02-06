@@ -14,6 +14,9 @@ body {
   color: white;
 }
 
+ul {
+  list-style-type: none;
+}
 
 .center {
   margin: auto;
