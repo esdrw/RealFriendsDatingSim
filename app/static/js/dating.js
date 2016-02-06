@@ -1,11 +1,73 @@
 (function() {
-  var responses = ['Will you marry me?', 'Really?', 'Sorry', friendName+'-Senpai!', 'I’ll beat him up for you', 'Er…', 'Happy birthday', 'But I have a girl/boyfriend', 'What was that?', 'Of course. I understand.', 'Wait!']
+  var firstName = friendName.substring(0, friendName.indexOf(' '));
+
+  var responses = [
+    'Will you marry me?', 
+    'Really?', 
+    'Sorry', 
+    firstName+'-Senpai!', 
+    'I’ll beat him up for you', 
+    'Er…', 
+    'Happy birthday', 
+    'But I\'m already taken', 
+    'What was that?', 
+    'Of course. I understand.', 
+    'Wait!'
+  ]
+
+  var intro = 'It\'s an unusually nice day at Carnegie Mellon University. You\'ve just finished your classes and are ready to head home when you hear the quiet sound of footsteps.';
+  var dia1 = 'Oh...it\'s good to see you. I have a secret, something I\'ve been meaning to tell you. You see...';
+  var dia2 = 'W-wait, even after all these years...you still remember my birthday?'
+  var diaGoodEnd = 'Thanks ' + firstName + '...You know, ever since that time...I\'ve always liked you...';
+  var diaBadEnd = 'Thanks ' + firstName + '. I\'m so happy for all the time we\'ve spent together...as good friends.'
+
+  var affection = 0.0;
+  var progress = 0;
+  var replies;
+  function playScene(num) {
+    switch (num) {
+      case 0:
+        hideName();
+        hidePhoto();
+        loadDialogue(intro, ['...' + firstName + '? Is that you?']);
+        break;
+      
+      case 1:  
+        showName(friendName);
+        showPhoto();
+        loadDialogue(dia1, ['What?']);
+        break;
+
+      case 5:
+        $.get('/birthday', function (data) {
+          if (data['birthday']) {
+            loadDialogue(dia2, ['Of course. It\'s ' + birthday]);
+          } else {
+            babble();
+          }
+        });
+        break;
+      
+      case 10:  
+        if (affection >= 80) {
+          loadDialogue(diaGoodEnd, []);
+        } else {
+          loadDialogue(diaBadEnd, []);
+        }
+        $('#the-end').show();
+        break;
+
+      default:
+        babble();
+    }
+  }
 
   function selectChoice() {
     console.log('clicked');
     updateAffection();
     clearDialogue();
-    loadDialogue();
+    progress++;
+    playScene(progress);
     return false;
   }
 
@@ -26,20 +88,10 @@
     $('#photo').hide();
   }
 
-  var affection = 0.0;
   var intervalId;
-  function frame() {
-    if (width >= (100 - (affection * 100))) {
-      width = width-1;
-      $('#bar').width = width + 'px';
-    } else {
-      clearInterval(intervalId);
-    }
-  }
-
   function updateAffection() {
     var incr = Math.random() * 0.25;
-    if (affection > incr && Math.random() < 0.5) {
+    if (affection > incr && Math.random() < 0.7) {
       incr = incr * -1;
     } else if (affection + incr >= 1.0) {
       // you win
@@ -61,8 +113,7 @@
     $('ul').remove();
   }
 
-  function createResponse() {
-    var responseList = $('<ul>');
+  function chooseResponses() {
     var curr = responses.slice(0, 4);
     for (var i = 4; i < responses.length; i++) {
       var rand = Math.floor(Math.random() * i);
@@ -70,28 +121,36 @@
         curr[rand] = responses[i];
       }
     }
-    $.each(curr, function(i) {
+    return curr;
+  }
+
+  function showResponses() {
+    var responseList = $('<ul>');
+    $.each(replies, function(i) {
       var li = $('<li/>').appendTo(responseList);
       var ahref = $('<a/>')
         .on('click', selectChoice)
-        .text(curr[i])
+        .text(replies[i])
         .appendTo(li);
       });
     $('#dialogue-box').append(responseList);
   }
 
-  function loadDialogue() {
+  function loadDialogue(text, resp) {
+    replies = resp;
+    $('#dialogue').typed({
+      strings: [text],
+      typeSpeed: 0,
+      showCursor: false,
+      contentType: 'text',
+      callback: showResponses
+    });
+  }
+    
+  function babble() {
     console.log('loading dialogue');
     $.get('/babble', function (data) {
-      // make text appear one letter at a time
-    console.log(data);
-      $('#dialogue').typed({
-        strings: [data['babble']],
-        typeSpeed: 0,
-        showCursor: false,
-        contentType: 'text',
-        callback: createResponse
-      });
+      loadDialogue(data['babble'], chooseResponses());
     });
   }
 
@@ -104,6 +163,6 @@
 
   $(document).ready(function() {
     updateBackground();
-    loadDialogue();
+    playScene(0);
   });
 })();

@@ -107,3 +107,9 @@ ul {
   font-weight: bold;
   letter-spacing: 0.1em;
 }
+
+#the-end {
+  font-weight: bold;
+  font-size: large;
+  display: none;
+}
