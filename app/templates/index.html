@@ -1,9 +1,9 @@
 {% extends "base.html" %}
 {% block content %}
-<div class="center" id="mainDiv">
+<div class="center">
     <div class="header">
       <h1>Kawaii Tomodachi-desu</h1>
-      <h4>Real Friend Dating Sim</h4>
+      <h3>Real Friend Dating Sim</h3>
     </div>
 
     <p class='circle-image'
@@ -13,13 +13,14 @@
     <h3>Hello, {{ user['name'] }}.</h3>
     <h4></h4>
 
-    <div>
+    <div class="black-box">
       <p>Your dating sim can be found at:</p>
       <pre>{{root_url}}date/{{ user['id'] }}</pre>
       <p>Share it with your friends!</p>
+
+      <a href="/logout" id="logout">Log out</a>
     </div>
 
-    <a href="/logout" id="logout">Log out</a>
     <script>
         document.getElementById('logout').onclick = function() {
             FB.logout(function(response) { });

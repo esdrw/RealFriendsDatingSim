@@ -1,4 +1,6 @@
 (function() {
+  var responses = ['Will you marry me?', 'Really?', 'Sorry', 'Senpai!', 'I’ll beat him up for you', 'Er…', 'Happy birthday', 'But I have a girl/boyfriend', 'What was that?', 'Of course. I understand.', 'Wait!']
+
   function selectChoice() {
     console.log('clicked');
     updateAffection();
@@ -29,7 +31,7 @@
 
   function updateAffection() {
     var incr = Math.random() * 0.25;
-    if (affection > incr && Math.floor(Math.random() * 2) == 0) {
+    if (affection > incr && Math.random() < 0.5) {
       incr = incr * -1;
     } else if (affection + incr >= 1.0) {
       // you win
@@ -44,10 +46,30 @@
     $('ul').remove();
   }
 
+  function createResponse() {
+    var responseList = $('<ul>');
+    /* $.each(data['you'], function(i) {
+      // TODO: replace existing list on page
+      // console.log(data['you'][i])
+      var li = $('<li/>').appendTo(responseList);
+      var ahref = $('<a/>')
+        .on('click', selectChoice)
+        .text(data['you'][i])
+        .appendTo(li);
+      }); */
+    $('#dialogue-box').append(responseList);
+  }
+
   function loadDialogue() {
     $.get('/babble', function (data) {
-      // TODO: make text appear one at a time: typed.js
-      $('#dialogue').text(data['them']);
+      // make text appear one letter at a time
+      $('#dialogue').typed({
+        strings: [data['them']],
+        typeSpeed: 0,
+        showCursor: false,
+        contentType: 'text',
+        callback: createResponse
+      });
       responseList = $('<ul>');
       $.each(data['you'], function(i) {
         var li = $('<li/>').appendTo(responseList);
@@ -60,7 +82,15 @@
     });
   }
 
+  function updateBackground() {
+    var height = $(window).height();
+    $('body').css('background-image', 'url(/static/images/school.jpg)');
+    $('body').css('background-size', 'cover');
+    $('body').height(height);
+  }
+
   $(document).ready(function() {
+    updateBackground();
     loadDialogue();
   });
 })();

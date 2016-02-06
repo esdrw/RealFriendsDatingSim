@@ -3,11 +3,11 @@
 <div class="center">
     <div class="header">
       <h1>Kawaii Tomodachi-desu</h1>
-      <h4>Real Friend Dating Sim</h4>
+      <h3>Real Friend Dating Sim</h3>
     </div>
 
     <p class='circle-image'
-       style="background-image: url(https://graph.facebook.com/{{ user['id'] }}/picture?type=large);
+       style="background-image: url(https://graph.facebook.com/{{ friend['id'] }}/picture?type=large);
               margin-left: auto; margin-right: auto;">
     </p>
     <h3>Dating {{ friend['name'] }}!</h3>
@@ -16,7 +16,7 @@
       <p id="dialogue"></p>
     </div>
 
-    <a href="/logout" id="logout">Log out</a>
+    <a href="/">Quit</a>
     <script>
         document.getElementById('logout').onclick = function() {
             FB.logout(function(response) { });
@@ -28,6 +28,7 @@
     </div>
 
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.2.0/jquery.min.js"></script>
+    <script src="/static/js/typed.min.js"></script>
     <script src="/static/js/dating.js"></script>
 
 </div>
