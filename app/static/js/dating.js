@@ -61,7 +61,7 @@
         break;
 
       case 10:
-        if (affection >= 80) {
+        if (affection >= 0.8) {
           loadDialogue(diaGoodEnd, []);
         } else {
           loadDialogue(diaBadEnd, []);
