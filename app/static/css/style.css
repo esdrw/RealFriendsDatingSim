@@ -39,8 +39,7 @@ ul {
   margin-top: -60px;
   width: 20%;
   height: 30px;
-  position: relative;
-  background-image: '/static/images/pink_sparkles.jpg';
+  background-image: url(/static/images/pink_sparkles.jpg);
   background-color: pink;
   border: 1px solid black;
   opacity: 1;

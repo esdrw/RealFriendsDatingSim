@@ -91,7 +91,7 @@
       // make text appear one letter at a time
     console.log(data);
       $('#dialogue').typed({
-        strings: [data['them']],
+        strings: [data['babble']],
         typeSpeed: 0,
         showCursor: false,
         contentType: 'text',

@@ -67,7 +67,7 @@ def date_friend(friendId=None):
     profile = graph.get_object(friendId)
     friend = profileToDict(profile)
 
-    session['friend'] = friendId
+    session['friend'] = friend
     # TODO: render actual dating page
     return render_template('dating.html', app_id=FB_APP_ID,
                            app_name=FB_APP_NAME, user=user,
@@ -79,18 +79,24 @@ def date_friend(friendId=None):
 def gen_babble():
     access_token = session.get('access_token', None)
     if not access_token:
-        return jsonify(dialogue=None)
+        return jsonify(babble=None)
 
     try:
         graph = GraphAPI(access_token)
     except GraphAPIError as e:
-        return jsonify(dialogue=None, error=e)
+        return jsonify(babble=None, error=e)
 
-    friendId = session['friend']
+    friendId = session['friend']['id']
     posts = graph.get_connections(id=friendId, connection_name='posts', limit=REQUEST_LIMIT)
 
     dialogue = babble_posts(posts)
-    return jsonify(them=dialogue)
+    return jsonify(babble=dialogue)
+
+@app.route('/birthday', methods=['GET'])
+@login_required
+def get_birthday():
+    return jsonify(birthday=session['friend']['birthday'])
+
 
 @app.route('/friends', methods=['GET'])
 @login_required
@@ -157,8 +163,7 @@ def get_current_user():
     g.user = session.get('user', None)
 
 def profileToDict(profile):
-    if 'link' not in profile:
-        profile['link'] = ""
     return dict(name=profile['name'],
-                profile_url=profile['link'],
-                id=str(profile['id']))
+                id=str(profile['id']),
+                profile_url=profile.get('link', ''),
+                birthday=profile.get('birthday', None))
