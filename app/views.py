@@ -16,7 +16,8 @@ def index():
     user = session.get('user')
     if user:
         return render_template('index.html', app_id=FB_APP_ID,
-                               app_name=FB_APP_NAME, user=user)
+                               app_name=FB_APP_NAME, user=user,
+                               root_url=request.url_root)
 
     # Otherwise, a user is not logged in.
     return redirect(url_for('login'))
@@ -43,15 +44,21 @@ def logout():
 def date_friend(friendId=None):
     """ Return a json of a random friend's data."""
     user = session.get('user')
+    access_token = session.get('access_token', None)
 
     # If there is no result, we assume the user is not logged in.
     if not user:
         return redirect(url_for('login'))
 
+    graph = GraphAPI(access_token)
+    profile = graph.get_object(friendId)
+    friend = profileToDict(profile)
+
     session['friend'] = friendId
     # TODO: render actual dating page
-    return render_template('index.html', app_id=FB_APP_ID,
-                           app_name=FB_APP_NAME, user=user)
+    return render_template('dating.html', app_id=FB_APP_ID,
+                           app_name=FB_APP_NAME, user=user,
+                           friend=friend)
 
 
 @app.route('/posts', methods=['GET'])
@@ -114,13 +121,17 @@ def get_current_user():
         # Not an existing user so get info
         graph = GraphAPI(result['access_token'])
         profile = graph.get_object('me')
-        if 'link' not in profile:
-            profile['link'] = ""
 
         # Add the user to the current session
-        session['user'] = dict(name=profile['name'], profile_url=profile['link'],
-                               id=str(profile['id']), access_token=result['access_token'])
+        session['user'] = profileToDict(profile)
         session['access_token'] = result['access_token']
 
     # Set the user as a global g.user
     g.user = session.get('user', None)
+
+def profileToDict(profile):
+    if 'link' not in profile:
+        profile['link'] = ""
+    return dict(name=profile['name'],
+                profile_url=profile['link'],
+                id=str(profile['id']))

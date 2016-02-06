@@ -93,5 +93,5 @@ for line in sentence.split("\n"):
 #tokenCounts = generateNGram(tokens, 2);
 
 
-def get_reply(replySentences, n=3):
+def get_reply(replySentences, n=1):
     return babbler.babble(get_freq_count(replySentences, n), n)

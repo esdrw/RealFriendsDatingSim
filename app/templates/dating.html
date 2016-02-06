@@ -10,13 +10,10 @@
        style="background-image: url(https://graph.facebook.com/{{ user['id'] }}/picture?type=large);
               margin-left: auto; margin-right: auto;">
     </p>
-    <h3>Hello, {{ user['name'] }}.</h3>
-    <h4></h4>
+    <h3>Dating {{ friend['name'] }}!</h3>
 
-    <div>
-      <p>Your dating sim can be found at:</p>
-      <pre>{{root_url}}date/{{ user['id'] }}</pre>
-      <p>Share it with your friends!</p>
+    <div id="dialogue-box">
+      <p id="dialogue"></p>
     </div>
 
     <a href="/logout" id="logout">Log out</a>
@@ -25,5 +22,9 @@
             FB.logout(function(response) { });
         };
     </script>
+
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.2.0/jquery.min.js"></script>
+    <script src="/static/js/app.js"></script>
+
 </div>
 {% endblock %}
