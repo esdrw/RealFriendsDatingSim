@@ -88,8 +88,7 @@ def gen_babble():
     posts = graph.get_connections(id=friendId, connection_name='posts')
 
     dialogue = babble_posts(posts)
-    # TODO: generate responses for you
-    return jsonify(them=dialogue, you=['Hello', 'Hi', 'Hey', 'Yo'])
+    return jsonify(them=dialogue)
 
 @app.route('/friends', methods=['GET'])
 @login_required
@@ -114,8 +113,8 @@ def get_friends():
 def babble_posts(posts):
     if not posts['data']:
         return ''
-    return get_reply([post['message'] for post in posts['data']])
-
+    return get_reply([post['message'] if 'message' in post
+        else 'Error: no this friend has no statuses' for post in posts['data']])
 
 @app.before_request
 def get_current_user():

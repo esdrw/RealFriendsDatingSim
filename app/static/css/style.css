@@ -36,7 +36,7 @@ ul {
   width: 100%;
   height: 30px;
   position: relative;
-  background-color: pink;
+  background-image: '/static/images/pink_sparkles.jpg';
 }
 
 #bar {

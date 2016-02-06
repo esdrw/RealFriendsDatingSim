@@ -1,5 +1,5 @@
 (function() {
-  var responses = ['Will you marry me?', 'Really?', 'Sorry', 'Senpai!', 'I’ll beat him up for you', 'Er…', 'Happy birthday', 'But I have a girl/boyfriend', 'What was that?', 'Of course. I understand.', 'Wait!']
+  var responses = ['Will you marry me?', 'Really?', 'Sorry', friendName+'-Senpai!', 'I’ll beat him up for you', 'Er…', 'Happy birthday', 'But I have a girl/boyfriend', 'What was that?', 'Of course. I understand.', 'Wait!']
 
   function selectChoice() {
     console.log('clicked');
@@ -48,15 +48,20 @@
 
   function createResponse() {
     var responseList = $('<ul>');
-    /* $.each(data['you'], function(i) {
-      // TODO: replace existing list on page
-      // console.log(data['you'][i])
+    var curr = responses.slice(0, 4);
+    for (var i = 4; i < responses.length; i++) {
+      var rand = Math.floor(Math.random() * i);
+      if (rand < 4) {
+        curr[rand] = responses[i];
+      }
+    }
+    $.each(curr, function(i) {
       var li = $('<li/>').appendTo(responseList);
       var ahref = $('<a/>')
         .on('click', selectChoice)
-        .text(data['you'][i])
+        .text(curr[i])
         .appendTo(li);
-      }); */
+      });
     $('#dialogue-box').append(responseList);
   }
 
@@ -70,15 +75,6 @@
         contentType: 'text',
         callback: createResponse
       });
-      responseList = $('<ul>');
-      $.each(data['you'], function(i) {
-        var li = $('<li/>').appendTo(responseList);
-        var ahref = $('<a/>')
-          .on('click', selectChoice)
-          .text(data['you'][i])
-          .appendTo(li);
-        });
-      $('#dialogue-box').append(responseList);
     });
   }
 
