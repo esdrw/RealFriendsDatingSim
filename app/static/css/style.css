@@ -11,6 +11,9 @@ h1, h2, h3, h4, h5, h6 {
 body {
   height: 100%;
   font-family: 'Droid Sans Mono', 'Courier New', monospace;
+  background-image: url(/static/images/hearts_bg.jpg);
+  background-repeat: no-repeat;
+  background-size: cover;
   background-color: #ffb6c1;
   font-size: 14px;
   color: white;
@@ -20,17 +23,49 @@ ul {
   list-style-type: none;
 }
 
+.container {
+  overflow: hidden;
+}
+
 .center {
   margin: auto;
   width: 80%;
   text-align: center;
 }
 
+#photo {
+  display: none;
+  position: absolute;
+  left: 20%;
+}
+
 .circle-image {
   width: 200px;
   height: 200px;
   border-radius: 100px;
-  margin: auto;
+}
+
+.circle-image-head {
+  position: absolute;
+  left: 25px;
+  top: -175px;
+}
+
+.anime-torso {
+  background-repeat: no-repeat;
+  background-size: contain;
+  position: absolute;
+  width: 240px;
+  height: 400px;
+  margin-top: 160px;
+}
+
+.anime-girl {
+  background-image: url(/static/images/anime_girl_torso.png);
+}
+
+.anime-guy {
+  background-image: url(/static/images/anime_guy_torso.png);
 }
 
 #affection {
@@ -55,7 +90,7 @@ ul {
 
 #dialogue-box {
   margin: auto;
-  margin-top: 60px;
+  margin-top: 30%;
   position: relative;
   padding: 20px;
   max-width: 700px;

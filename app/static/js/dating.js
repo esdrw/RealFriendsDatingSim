@@ -173,6 +173,7 @@
   function updateBackground() {
     var height = $(window).height();
     $('body').css('background-image', 'url(/static/images/school.jpg)');
+    $('body').css('background-repeat', 'no-repeat');
     $('body').css('background-size', 'cover');
     $('body').height(height);
   }

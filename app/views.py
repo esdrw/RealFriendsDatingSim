@@ -166,4 +166,5 @@ def profileToDict(profile):
     return dict(name=profile['name'],
                 id=str(profile['id']),
                 profile_url=profile.get('link', ''),
-                birthday=profile.get('birthday', None))
+                birthday=profile.get('birthday', None),
+                gender=profile.get('gender', None))
