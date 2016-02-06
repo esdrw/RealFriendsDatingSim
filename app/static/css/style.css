@@ -107,3 +107,20 @@ ul {
   font-weight: bold;
   letter-spacing: 0.1em;
 }
+
+#friends {
+  margin-top: 10px;
+}
+
+#friends li {
+  display: inline-block;
+  vertical-align: middle;
+  height: 100px;
+  width: 25%;
+}
+
+#friends li img {
+  border-radius: 30px;
+  min-width: 60px;
+  min-height: 60px;
+}

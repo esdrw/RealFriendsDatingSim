@@ -111,11 +111,11 @@ def get_friends():
         return jsonify(friends=None, error=e)
 
     friends = graph.get_connections(id='me', connection_name='friends')
-    if not friends.data:
+    if not friends['data']:
         # you have no friends :(
         return jsonify(friends=None)
 
-    return jsonify(friends=friends.data)
+    return jsonify(friends=friends['data'])
 
 
 def babble_posts(posts):
