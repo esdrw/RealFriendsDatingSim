@@ -9,7 +9,6 @@
     <p class="circle-image" id="photo"
        style="background-image: url(https://graph.facebook.com/{{ friend['id'] }}/picture?type=large);">
     </p>
-    <h3>Dating {{ friend['name'] }}!</h3>
 
     <div id="dialogue-box" class="transparent-box">
       <div id="name-box" class="dark-box">
@@ -22,7 +21,7 @@
       <p id="dialogue"></p>
     </div>
 
-    <a href="/">Quit</a>
+    <h3><a href="/">Back Home</a></h3>
     <script>
         friendName = '{{ friend['name']|safe }}';
         userName = '{{ user['name']|safe }}';

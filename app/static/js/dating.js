@@ -3,17 +3,20 @@
   var userFirstName = userName.substring(0, userName.indexOf(' '));
 
   var responses = [
-    'Will you marry me?', 
-    'Really?', 
-    'Sorry', 
-    firstName+'-Senpai!', 
-    'I’ll beat him up for you', 
-    'Er…', 
-    'Happy birthday', 
-    'But I\'m already taken', 
-    'What was that?', 
-    'Of course. I understand.', 
-    'Wait!'
+    'Will you marry me?',
+    'Really?',
+    'Sorry...',
+    firstName+'-Senpai!',
+    'I’ll beat him up for you.',
+    'Er…',
+    'Happy birthday!',
+    'But I\'m already taken',
+    'What was that?',
+    'Of course. I understand.',
+    'Wait!',
+    'Since I\'ve set my eyes on you, I\'ve always known.',
+    'I\'ve only used 0.01\% of my charm!',
+    'I got lost in your eyes.'
   ]
 
   var intro = 'It\'s an unusually nice day at Carnegie Mellon University. You\'ve just finished your classes and are ready to head home when you hear the quiet sound of footsteps.';
@@ -33,8 +36,8 @@
         hidePhoto();
         loadDialogue(intro, ['...' + firstName + '? Is that you?']);
         break;
-      
-      case 1:  
+
+      case 1:
         showName(friendName);
         showPhoto();
         loadDialogue(dia1, ['What?']);
@@ -49,8 +52,8 @@
           }
         });
         break;
-      
-      case 10:  
+
+      case 10:
         if (affection >= 80) {
           loadDialogue(diaGoodEnd, []);
         } else {
@@ -64,7 +67,6 @@
   }
 
   function selectChoice() {
-    console.log('clicked');
     updateAffection();
     clearDialogue();
     progress++;
@@ -83,10 +85,12 @@
 
   function showPhoto() {
     $('#photo').show();
+    $('#affection').show();
   }
 
   function hidePhoto() {
     $('#photo').hide();
+    $('#affection').hide();
   }
 
   var intervalId;
@@ -103,7 +107,6 @@
     $('#bar').animate({
       width: newWidth + 'px'
     })
-    console.log(affection);
   }
 
   function clearDialogue() {
@@ -149,7 +152,6 @@
   }
     
   function babble() {
-    console.log('loading dialogue');
     $.get('/babble', function (data) {
       loadDialogue(data['babble'], chooseResponses());
     });
