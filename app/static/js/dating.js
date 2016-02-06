@@ -28,14 +28,6 @@
 
   var affection = 0.0;
   var intervalId;
-  function frame() {
-    if (width >= (100 - (affection * 100))) {
-      width = width-1;
-      $('#bar').width = width + 'px';
-    } else {
-      clearInterval(intervalId);
-    }
-  }
 
   function updateAffection() {
     var incr = Math.random() * 0.25;
@@ -46,7 +38,7 @@
     }
     affection += incr;
     var width = $('#affection').width();
-    var newWidth = Math.floor(width - (width * affection));
+    var newWidth = Math.floor(width * affection);
     $('#bar').animate({
       width: newWidth + 'px'
     })
