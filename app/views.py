@@ -9,6 +9,9 @@ FB_APP_ID = '1561303244188583'
 FB_APP_NAME = 'Kawaii Tomodachi-desu'
 FB_APP_SECRET = '51026d49c3cf27a091d502b1f8ef0698'
 
+# Max number of objects to return from FB query
+REQUEST_LIMIT = 100
+
 # Login wrapper
 def login_required(f):
     @wraps(f)
@@ -85,7 +88,7 @@ def gen_babble():
         return jsonify(dialogue=None, error=e)
 
     friendId = session['friend']
-    posts = graph.get_connections(id=friendId, connection_name='posts')
+    posts = graph.get_connections(id=friendId, connection_name='posts', limit=REQUEST_LIMIT)
 
     dialogue = babble_posts(posts)
     return jsonify(them=dialogue)
@@ -113,8 +116,7 @@ def get_friends():
 def babble_posts(posts):
     if not posts['data']:
         return ''
-    return get_reply([post['message'] if 'message' in post
-        else 'Error: no this friend has no statuses' for post in posts['data']])
+    return get_reply([post.get('message') for post in posts['data'] if post.get('message')])
 
 @app.before_request
 def get_current_user():

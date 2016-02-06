@@ -6,13 +6,19 @@
       <h3>Real Friend Dating Sim</h3>
     </div>
 
-    <p class='circle-image'
-       style="background-image: url(https://graph.facebook.com/{{ friend['id'] }}/picture?type=large);
-              margin-left: auto; margin-right: auto;">
+    <p class="circle-image" id="photo"
+       style="background-image: url(https://graph.facebook.com/{{ friend['id'] }}/picture?type=large);">
     </p>
     <h3>Dating {{ friend['name'] }}!</h3>
 
-    <div id="dialogue-box">
+    <div id="dialogue-box" class="transparent-box">
+      <div id="name-box" class="dark-box">
+        <h3 id="name">{{ friend['name'] }}</h3>
+      </div>
+      <div id="progress">
+          <div id="bar"></div>
+      </div>
+
       <p id="dialogue"></p>
     </div>
 
@@ -20,10 +26,6 @@
     <script>
         friendName = '{{ friend['name']|safe }}';
     </script>
-
-    <div id="progress">
-        <div id="bar"></div>
-    </div>
 
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.2.0/jquery.min.js"></script>
     <script src="/static/js/typed.min.js"></script>

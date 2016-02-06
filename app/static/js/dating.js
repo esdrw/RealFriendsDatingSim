@@ -9,6 +9,23 @@
     return false;
   }
 
+  function showName(name) {
+    $('#name-box').show();
+    $('#name').text(name);
+  }
+
+  function hideName() {
+    $('#name-box').hide();
+  }
+
+  function showPhoto() {
+    $('#photo').show();
+  }
+
+  function hidePhoto() {
+    $('#photo').hide();
+  }
+
   var affection = 0.0;
   var intervalId;
   function frame() {
