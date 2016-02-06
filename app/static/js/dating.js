@@ -22,21 +22,30 @@
     $('ul').remove();
   }
 
+  function createResponse() {
+    var responseList = $('<ul>');
+    $.each(data['you'], function(i) {
+      // TODO: replace existing list on page
+      // console.log(data['you'][i])
+      var li = $('<li/>').appendTo(responseList);
+      var ahref = $('<a/>')
+        .on('click', selectChoice)
+        .text(data['you'][i])
+        .appendTo(li);
+      });
+    $('#dialogue-box').append(responseList);
+  }
+
   function loadDialogue() {
     $.get('/babble', function (data) {
-      // TODO: make text appear one at a time: typed.js
-      $('#dialogue').text(data['them']);
-      responseList = $('<ul>');
-      $.each(data['you'], function(i) {
-        // TODO: replace existing list on page
-        // console.log(data['you'][i])
-        var li = $('<li/>').appendTo(responseList);
-        var ahref = $('<a/>')
-          .on('click', selectChoice)
-          .text(data['you'][i])
-          .appendTo(li);
-        });
-      $('#dialogue-box').append(responseList);
+      // make text appear one letter at a time
+      $('#dialogue').typed({
+        strings: [data['them']],
+        typeSpeed: 0,
+        showCursor: false,
+        contentType: 'text',
+        callback: createResponse
+      });
     });
   }
 
