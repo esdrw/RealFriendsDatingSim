@@ -11,6 +11,9 @@ h1, h2, h3, h4, h5, h6 {
 body {
   height: 100%;
   font-family: 'Droid Sans Mono', 'Courier New', monospace;
+  background-image: url(/static/images/hearts_bg.jpg);
+  background-repeat: no-repeat;
+  background-size: cover;
   background-color: #ffb6c1;
   font-size: 14px;
   color: white;
