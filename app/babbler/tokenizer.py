@@ -5,6 +5,8 @@ import babbler
 import re
 import string
 
+nltk.data.path.append('app/babbler/nltk_data/')
+
 startSymbol = "NODATA"
 stopSymbol = "THISISTHEEND"
 
