@@ -34,7 +34,7 @@
         loadDialogue(intro, ['...' + firstName + '? Is that you?']);
         break;
       
-      case 10:  
+      case 1:  
         showName(friendName);
         showPhoto();
         loadDialogue(dia1, ['What?']);
@@ -50,7 +50,7 @@
         });
         break;
       
-      case 1:  
+      case 10:  
         if (affection >= 80) {
           loadDialogue(diaGoodEnd, []);
         } else {
