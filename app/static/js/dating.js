@@ -37,9 +37,9 @@
     }
   }
 
-  function updateProgress() {
+  function updateAffection() {
     // intervalId = setInterval(frame, 10);
-    var width = $('#progress').width();
+    var width = $('#affection').width();
     var newWidth = Math.floor(width - (width * affection));
     $('#bar').animate({
       width: newWidth + 'px'
@@ -54,12 +54,15 @@
       // you win
     }
     affection += incr;
-    updateProgress();
+    updateAffection();
     console.log(affection);
   }
 
   function clearDialogue() {
-    $('#dialogue').text('');
+    $('#dialogue').remove();
+    $('<div>')
+      .attr('id', 'dialogue')
+      .appendTo($('#dialogue-box'));
     $('ul').remove();
   }
 
@@ -83,8 +86,10 @@
   }
 
   function loadDialogue() {
+    console.log('loading dialogue');
     $.get('/babble', function (data) {
       // make text appear one letter at a time
+    console.log(data);
       $('#dialogue').typed({
         strings: [data['them']],
         typeSpeed: 0,
