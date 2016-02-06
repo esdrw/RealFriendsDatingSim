@@ -1,7 +1,7 @@
 from facebook import get_user_from_cookie, GraphAPI
 from flask import g, jsonify, render_template, redirect, request, session, url_for
-
 from app import app
+from babbler import get_reply
 
 # Facebook app details
 FB_APP_ID = '1561303244188583'
@@ -55,15 +55,17 @@ def date_friend(friendId=None):
 
 
 @app.route('/posts', methods=['GET'])
-def get_statuses():
+def get_dialogue():
     access_token = session.get('access_token', None)
     if not access_token:
-        return jsonify(posts=None)
+        return jsonify(dialogue=None)
 
     graph = GraphAPI(access_token)
     friendId = session['friend']
     posts = graph.get_connections(id=friendId, connection_name='posts')
-    return jsonify(posts=posts)
+
+    dialogue = babble_posts(posts)
+    return jsonify(dialogue=dialogue)
 
 
 @app.route('/friends', methods=['GET'])
@@ -79,6 +81,11 @@ def get_friends():
         return jsonify(friends=None)
 
     return jsonify(friends=friends.data)
+
+def babble_posts(posts):
+    if not posts['data']:
+        return ''
+    return get_reply([post['message'] for post in posts['data']])
 
 @app.before_request
 def get_current_user():

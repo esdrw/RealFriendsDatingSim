@@ -4,11 +4,15 @@ $(document).ready(function() {
     url: '/posts',
     type: 'GET',
     success: function(json) {
-      console.log(json);
+      showDialogue(json.dialogue);
     },
     error: function(xhr, status, error) {
       console.log("error getting posts!", error);
     }
   });
+
+  function showDialogue(text) {
+    $('#dialogue').text(text);
+  }
 
 });

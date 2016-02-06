@@ -12,6 +12,11 @@
     </p>
     <h3>Hello, {{ user['name'] }}.</h3>
     <h4>{{ user['id'] }}</h4>
+
+    <div id="dialogue-box">
+      <p id="dialogue"></p>
+    </div>
+
     <a href="/logout" id="logout">Log out</a>
     <script>
         document.getElementById('logout').onclick = function() {
@@ -19,7 +24,7 @@
         };
     </script>
 
-    <script src="/static/js/jquery/jquery-2.1.0.min.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.2.0/jquery.min.js"></script>
     <script src="/static/js/app.js"></script>
 
 </div>
