@@ -38,15 +38,6 @@
   }
 
   function updateAffection() {
-    // intervalId = setInterval(frame, 10);
-    var width = $('#affection').width();
-    var newWidth = Math.floor(width - (width * affection));
-    $('#bar').animate({
-      width: newWidth + 'px'
-    })
-  }
-
-  function updateAffection() {
     var incr = Math.random() * 0.25;
     if (affection > incr && Math.random() < 0.5) {
       incr = incr * -1;
@@ -54,7 +45,11 @@
       // you win
     }
     affection += incr;
-    updateAffection();
+    var width = $('#affection').width();
+    var newWidth = Math.floor(width - (width * affection));
+    $('#bar').animate({
+      width: newWidth + 'px'
+    })
     console.log(affection);
   }
 
