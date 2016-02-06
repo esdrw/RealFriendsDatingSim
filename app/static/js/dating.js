@@ -99,7 +99,7 @@
     }
     affection += incr;
     var width = $('#affection').width();
-    var newWidth = Math.floor(width - (width * affection));
+    var newWidth = Math.floor(width * affection);
     $('#bar').animate({
       width: newWidth + 'px'
     })
