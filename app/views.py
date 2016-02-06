@@ -1,4 +1,4 @@
-from facebook import get_user_from_cookie, GraphAPI
+from facebook import get_user_from_cookie, GraphAPI, GraphAPIError
 from functools import wraps
 from flask import g, jsonify, render_template, redirect, request, session, url_for
 from app import app
@@ -64,7 +64,6 @@ def date_friend(friendId=None):
         # If something went wrong with token, redirect to login
         return redirect(url_for('login'))
 
-    graph = GraphAPI(access_token)
     profile = graph.get_object(friendId)
     friend = profileToDict(profile)
 
@@ -137,21 +136,22 @@ def get_current_user():
         return
 
     # Attempt to get the short term access token for the current user.
-    result = get_user_from_cookie(cookies=request.cookies, app_id=FB_APP_ID,
-                                  app_secret=FB_APP_SECRET)
+    try:
+        result = get_user_from_cookie(cookies=request.cookies, app_id=FB_APP_ID,
+                                      app_secret=FB_APP_SECRET)
 
-    # If there is no result, we assume the user is not logged in.
-    if result:
-        # Not an existing user so get info
-        try:
+        # If there is no result, we assume the user is not logged in.
+        if result:
+            # Not an existing user so get info
             graph = GraphAPI(result['access_token'])
-        except GraphAPIError:
-            return
-        profile = graph.get_object('me')
+            profile = graph.get_object('me')
 
-        # Add the user to the current session
-        session['user'] = profileToDict(profile)
-        session['access_token'] = result['access_token']
+            # Add the user to the current session
+            session['user'] = profileToDict(profile)
+            session['access_token'] = result['access_token']
+
+    except GraphAPIError:
+        pass
 
     # Set the user as a global g.user
     g.user = session.get('user', None)
