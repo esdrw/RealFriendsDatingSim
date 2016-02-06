@@ -88,6 +88,14 @@ ul {
   background-image: url(/static/images/pink_sparkles.jpg);
 }
 
+.heart {
+  position: absolute;
+  right: -30px;
+  top: -10px;
+  height: 50px;
+  width: 50px;
+}
+
 #dialogue-box {
   margin: auto;
   margin-top: 30%;
