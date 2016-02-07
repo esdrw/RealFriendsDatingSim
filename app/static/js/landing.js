@@ -1,7 +1,6 @@
 (function() {
   function findFriends() {
     $.get('/friends', function (data) {
-      console.log(data);
       if (data && data.friends.length > 0) {
         $('#friends-box').show();
 

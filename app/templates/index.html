@@ -10,12 +10,14 @@
        style="background-image: url(https://graph.facebook.com/{{ user['id'] }}/picture?type=large);
               margin-left: auto; margin-right: auto;">
     </p>
-    <h3>Hello, {{ user['name'] }}.</h3>
+    <h3>Hello, {{ user['first_name'] }}.</h3>
     <h4></h4>
 
     <div class="black-box">
       <p>Your dating sim can be found at:</p>
-      <pre>{{root_url}}date/{{ user['id'] }}</pre>
+      <a href="{{ root_url }}date/{{ user['id'] }}">
+        {{ root_url }}date/{{ user['id'] }}
+      </a>
 
       <p>Share it with your friends!</p>
       <div class="fb-share-button" data-href="{{root_url}}date/{{ user['id'] }}" data-layout="button"></div>
@@ -32,8 +34,12 @@
     </div>
 
     <script>
-        document.getElementById('logout').onclick = function() {
-            FB.logout(function(response) { });
+        document.getElementById('logout').onclick = function(e) {
+            // Don't move until FB logout succeeds
+            e.preventDefault();
+            FB.logout(function(response) {
+              window.location.assign('{{ root_url }}logout');
+            });
         };
     </script>
 

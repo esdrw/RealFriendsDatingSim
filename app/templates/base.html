@@ -38,7 +38,7 @@
             });
 
             FB.Event.subscribe('auth.login', function(response) {
-                window.location = '{{ next|safe }}';
+                window.location.assign('{{ root_url }}{{ next|safe }}');
             });
         };
 

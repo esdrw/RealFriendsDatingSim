@@ -9,6 +9,8 @@ FB_APP_ID = '1561303244188583'
 FB_APP_NAME = 'Kawaii Tomodachi-desu'
 FB_APP_SECRET = '51026d49c3cf27a091d502b1f8ef0698'
 
+PROFILE_FIELDS = 'id,name,first_name,gender,birthday,link'
+
 # Max number of objects to return from FB query
 REQUEST_LIMIT = 100
 
@@ -17,7 +19,7 @@ def login_required(f):
     @wraps(f)
     def decorated_function(*args, **kwargs):
         if g.user is None:
-            return redirect(url_for('login', next=request.url))
+            return redirect(url_for('login', next=request.path))
         return f(*args, **kwargs)
     return decorated_function
 
@@ -34,9 +36,12 @@ def index():
 @app.route('/login')
 def login():
     """Log in user on Facebook."""
+    if session.get('user'):
+        return redirect(url_for('index'))
+
     next = request.args.get('next') or url_for('index')
     return render_template('login.html', app_id=FB_APP_ID, name=FB_APP_NAME,
-                           next=next)
+                           root_url=request.url_root, next=next[1:])
 
 @app.route('/logout')
 def logout():
@@ -47,8 +52,9 @@ def logout():
     by the JavaScript SDK.
     """
     session.pop('user', None)
+    session.pop('access_token', None)
     g.user = None
-    return redirect(url_for('index'))
+    return redirect(url_for('login'))
 
 
 @app.route('/date/<friendId>', methods=['GET'])
@@ -60,15 +66,14 @@ def date_friend(friendId=None):
 
     try:
         graph = GraphAPI(access_token)
-        profile = graph.get_object(friendId)
-    except GraphAPIError as e:
-        # If something went wrong with token, redirect to login
-        return redirect(url_for('login'))
+        profile = graph.get_object(friendId, fields=PROFILE_FIELDS)
+    except GraphAPIError:
+        # If something went wrong with token, redirect to logout and login
+        return redirect(url_for('logout'))
 
     friend = profileToDict(profile)
 
     session['friend'] = friend
-    # TODO: render actual dating page
     return render_template('dating.html', app_id=FB_APP_ID,
                            app_name=FB_APP_NAME, user=user,
                            friend=friend)
@@ -86,10 +91,11 @@ def gen_babble():
         friendId = session['friend']['id']
         posts = graph.get_connections(id=friendId, connection_name='posts', limit=REQUEST_LIMIT)
     except GraphAPIError as e:
-        return jsonify(babble=None, error=e)
+        return jsonify(babble=None, error=e.result)
 
     dialogue = babble_posts(posts)
     return jsonify(babble=dialogue)
+
 
 @app.route('/birthday', methods=['GET'])
 @login_required
@@ -109,7 +115,7 @@ def get_friends():
         graph = GraphAPI(access_token)
         friends = graph.get_connections(id='me', connection_name='friends')
     except GraphAPIError as e:
-        return jsonify(friends=None, error=e)
+        return jsonify(friends=None, error=e.result)
 
     if not friends['data']:
         # you have no friends :(
@@ -150,7 +156,7 @@ def get_current_user():
         if result:
             # Not an existing user so get info
             graph = GraphAPI(result['access_token'])
-            profile = graph.get_object('me')
+            profile = graph.get_object('me', fields=PROFILE_FIELDS)
 
             # Add the user to the current session
             session['user'] = profileToDict(profile)
@@ -162,9 +168,15 @@ def get_current_user():
     # Set the user as a global g.user
     g.user = session.get('user', None)
 
+
+# TODO: check if people decline post permission
+def checkDeclinedPermissions():
+    user = session.get('user')
+
 def profileToDict(profile):
     return dict(name=profile['name'],
                 id=str(profile['id']),
+                first_name=profile.get('first_name'),
                 profile_url=profile.get('link', ''),
-                birthday=profile.get('birthday', None),
-                gender=profile.get('gender', None))
+                birthday=profile.get('birthday'),
+                gender=profile.get('gender'))

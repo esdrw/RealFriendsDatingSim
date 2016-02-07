@@ -53,7 +53,7 @@
         $.get('/birthday', function (data) {
           console.log(data['birthday']);
           if (data['birthday']) {
-            loadDialogue(dia2, [['Of course. It\'s ' + birthday, 1.0]]);
+            loadDialogue(dia2, [['Of course. It\'s ' + data['birthday'], 1.0]]);
           } else {
             babble();
           }
