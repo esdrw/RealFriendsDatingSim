@@ -36,9 +36,6 @@ def index():
 @app.route('/login')
 def login():
     """Log in user on Facebook."""
-    if session.get('user'):
-        return redirect(url_for('index'))
-
     next = request.args.get('next') or url_for('index')
     return render_template('login.html', app_id=FB_APP_ID, name=FB_APP_NAME,
                            root_url=request.url_root, next=next[1:])
@@ -100,8 +97,22 @@ def gen_babble():
 @app.route('/birthday', methods=['GET'])
 @login_required
 def get_birthday():
-    print session['friend']['birthday']
     return jsonify(birthday=session['friend']['birthday'])
+
+@app.route('/permissions', methods=['GET'])
+@login_required
+def get_permissions():
+    access_token = session.get('access_token', None)
+    if not access_token:
+        return jsonify(permissions=None)
+
+    try:
+        graph = GraphAPI(access_token)
+        permissions = graph.get_connections(id='me', connection_name='permissions')
+    except GraphAPIError as e:
+        return jsonify(permissions=None, error=e.result)
+
+    return jsonify(permissions=permissions)
 
 
 @app.route('/friends', methods=['GET'])

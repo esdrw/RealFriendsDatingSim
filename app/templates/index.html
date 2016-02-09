@@ -34,11 +34,12 @@
     </div>
 
     <script>
+        var root_url = '{{ root_url }}';
         document.getElementById('logout').onclick = function(e) {
             // Don't move until FB logout succeeds
             e.preventDefault();
             FB.logout(function(response) {
-              window.location.assign('{{ root_url }}logout');
+              window.location.assign(root_url + 'logout');
             });
         };
     </script>

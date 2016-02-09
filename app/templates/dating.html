@@ -27,8 +27,9 @@
 
     <h3><a href="/">Back Home</a></h3>
     <script>
-        friendName = '{{ friend['name']|safe }}';
-        userName = '{{ user['name']|safe }}';
+        var friendName = '{{ friend['name']|safe }}';
+        var userName = '{{ user['name']|safe }}';
+        var root_url = '{{ root_url }}';
     </script>
 
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.2.0/jquery.min.js"></script>

@@ -1,7 +1,13 @@
 (function() {
   function findFriends() {
-    $.get('/friends', function (data) {
-      if (data && data.friends.length > 0) {
+    $.get('/friends', function(data) {
+      if (data.error) {
+        // Redirect to login page in case access token expired
+        window.location.assign(root_url + 'login');
+        return;
+      }
+
+      if (data.friends) {
         $('#friends-box').show();
 
         var friendsList = $('#friends');
@@ -19,7 +25,24 @@
     var name = $('<div/>').text(friend.name).appendTo(ahref);
   }
 
+  function checkPermissions() {
+    $.get('/permissions', function(data) {
+      if (data.error) {
+        // Redirect to login page in case access token expired
+        window.location.assign(root_url + 'login');
+        return;
+      }
+
+      for (var i = 0; i < data.length; i++) {
+        if (data[i].permission == 'user_posts' && data[i].status != 'granted') {
+          // TODO: tell them to allow user_posts
+        }
+      }
+    });
+  }
+
   $(document).ready(function() {
+    checkPermissions();
     findFriends();
   });
 })();
