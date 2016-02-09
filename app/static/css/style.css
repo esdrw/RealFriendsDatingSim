@@ -39,6 +39,10 @@ ul {
   left: 20%;
 }
 
+.error {
+  color: darkred;
+}
+
 .circle-image {
   width: 200px;
   height: 200px;

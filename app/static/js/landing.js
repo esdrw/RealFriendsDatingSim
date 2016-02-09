@@ -26,6 +26,16 @@
   }
 
   function checkPermissions() {
+    $('#relogin').click(function(e) {
+      e.preventDefault();
+      FB.login(function(response) {
+          window.location = window.location; // refresh
+      }, {
+        scope: 'user_posts',
+        auth_type: 'rerequest'
+      });
+    });
+
     $.get('/permissions', function(data) {
       if (data.error) {
         // Redirect to login page in case access token expired
@@ -33,9 +43,12 @@
         return;
       }
 
-      for (var i = 0; i < data.length; i++) {
-        if (data[i].permission == 'user_posts' && data[i].status != 'granted') {
-          // TODO: tell them to allow user_posts
+      console.log(data);
+      var permissions = data.permissions.data;
+      for (var i = 0; i < permissions.length; i++) {
+        if (permissions[i].permission === 'user_posts' && permissions[i].status === 'declined') {
+          $('#dating-info').hide();
+          $('#dating-error').show();
         }
       }
     });
