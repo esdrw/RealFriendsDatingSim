@@ -180,7 +180,7 @@
     updateBackground();
 
     // Test babbling to make sure everything works
-    $.get('/babble', function(data) {
+    $.get('/babble?limit=1', function(data) {
       if (data.error) {
         // Redirect to login page in case access token expired
         window.location.assign(root_url + 'logout');

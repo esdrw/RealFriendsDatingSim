@@ -79,6 +79,7 @@ def date_friend(friendId=None):
 @app.route('/babble', methods=['GET'])
 @login_required
 def gen_babble():
+    limit = request.args.get('limit') or REQUEST_LIMIT
     access_token = session.get('access_token', None)
     if not access_token:
         return jsonify(babble=None, error="Missing access token.")
@@ -86,7 +87,7 @@ def gen_babble():
     try:
         graph = GraphAPI(access_token)
         friendId = session['friend']['id']
-        posts = graph.get_connections(id=friendId, connection_name='posts', limit=REQUEST_LIMIT)
+        posts = graph.get_connections(id=friendId, connection_name='posts', limit=limit)
     except GraphAPIError as e:
         return jsonify(babble=None, error=e.result)
 
@@ -124,15 +125,21 @@ def get_friends():
 
     try:
         graph = GraphAPI(access_token)
-        friends = graph.get_connections(id='me', connection_name='friends')
+        profiles = graph.get_connections(id='me', connection_name='friends')
     except GraphAPIError as e:
         return jsonify(friends=None, error=e.result)
 
-    if not friends['data']:
+    # TODO: replace with query to Firebase on whether friend can babble
+    def can_babble(fid):
+        return bool(graph.get_connections(id=fid, connection_name='posts', limit=1)['data'])
+
+    friends = [f for f in profiles['data'] if can_babble(f['id'])]
+
+    if not friends:
         # you have no friends :(
         return jsonify(friends=None)
 
-    return jsonify(friends=friends['data'])
+    return jsonify(friends=friends)
 
 
 def babble_posts(posts):
