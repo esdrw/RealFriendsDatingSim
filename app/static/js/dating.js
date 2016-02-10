@@ -19,7 +19,9 @@
     ['Since I\'ve set my eyes on you, I\'ve always known.', 0.8],
     ['I\'ve only used 0.01\% of my charm!', 0.5],
     ['I got lost in your eyes.', 0.8]
-  ]
+  ];
+
+  var maxAffectionIncr = 0.3;
 
   var intro = 'It\'s an unusually nice day at Carnegie Mellon University. You\'ve just finished your classes and are ready to head home when you hear the quiet sound of footsteps.';
   var dia1 = 'Oh...it\'s good to see you. I have a secret, something I\'ve been meaning to tell you. You see...';
@@ -102,7 +104,7 @@
 
   var intervalId;
   function updateAffection(prob) {
-    var incr = Math.random() * 0.7;
+    var incr = Math.random() * maxAffectionIncr;
     if (Math.random() > prob.data.prob) {
       if (affection > incr) {
         incr = incr * -1;
