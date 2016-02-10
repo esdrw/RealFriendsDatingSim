@@ -37,9 +37,14 @@
                 version    : 'v2.5'
             });
 
-            FB.Event.subscribe('auth.login', function(response) {
-                window.location = '{{ next|safe }}';
-            });
+            var login = function(response) {
+                if (response.status === 'connected' && window.location.href === '{{ root_url }}login') {
+                    window.location.assign('{{ root_url }}{{ next|safe }}');
+                }
+            };
+
+            FB.Event.subscribe('auth.login', login);
+            FB.Event.subscribe('auth.authResponseChange', login);
         };
 
         // Load the SDK Asynchronously

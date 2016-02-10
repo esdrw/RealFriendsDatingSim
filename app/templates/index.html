@@ -10,21 +10,32 @@
        style="background-image: url(https://graph.facebook.com/{{ user['id'] }}/picture?type=large);
               margin-left: auto; margin-right: auto;">
     </p>
-    <h3>Hello, {{ user['name'] }}.</h3>
+    <h3>Hello, {{ user['first_name'] }}.</h3>
     <h4></h4>
 
     <div class="black-box">
-      <p>Your dating sim can be found at:</p>
-      <pre>{{root_url}}date/{{ user['id'] }}</pre>
+      <div id="dating-error" class="error" style="display: none;">
+        <h3>Oops!</h3>
+        <p>It looks like you've declined permission to access your Facebook posts. Unfortunately, our algorithm cannot generate a dating sim without examining your writing style.</p>
 
-      <p>Share it with your friends!</p>
-      <div class="fb-share-button" data-href="{{root_url}}date/{{ user['id'] }}" data-layout="button"></div>
+        <p>Please <a href="#" id="relogin">click here</a> to give us permission. No human will ever read your data, and we do not store any personal information, pinky promise!
+      </div>
 
-      <div id="friends-box" style="display:none;">
-        <br/>
-        <p>Or, date one of your friends below:</p>
-        <ul id="friends">
-        </ul>
+      <div id="dating-info">
+        <p>Your dating sim can be found at:</p>
+        <a href="{{ root_url }}date/{{ user['id'] }}">
+          {{ root_url }}date/{{ user['id'] }}
+        </a>
+
+        <p>Share it with your friends!</p>
+        <div class="fb-share-button" data-href="{{root_url}}date/{{ user['id'] }}" data-layout="button"></div>
+
+        <div id="friends-box" style="display:none;">
+          <br/>
+          <p>Or, date one of your friends below:</p>
+          <ul id="friends">
+          </ul>
+        </div>
       </div>
 
       <br/>
@@ -32,8 +43,13 @@
     </div>
 
     <script>
-        document.getElementById('logout').onclick = function() {
-            FB.logout(function(response) { });
+        var root_url = '{{ root_url }}';
+        document.getElementById('logout').onclick = function(e) {
+            // Don't move until FB logout succeeds
+            e.preventDefault();
+            FB.logout(function(response) {
+              window.location.assign(root_url + 'logout');
+            });
         };
     </script>
 

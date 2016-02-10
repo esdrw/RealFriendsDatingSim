@@ -2,16 +2,17 @@
   var firstName = friendName.substring(0, friendName.indexOf(' '));
   var userFirstName = userName.substring(0, userName.indexOf(' '));
   var gameOver = false;
+  var canBabble = true;
 
   // Response and probability of increasing affection.
   var responses = [
     ['Will you marry me?', 0.2],
     ['Really?', 0.5],
-    ['Sorry', 0.9],
+    ['Sorry.', 0.9],
     [firstName+'-Senpai!', 1.0],
-    ['I’ll beat him up for you', 1.0],
+    ['I’ll beat him up for you.', 1.0],
     ['Er…', 0.5],
-    ['Happy birthday', 0.8],
+    ['Happy birthday.', 0.8],
     ['But I\'m already taken', 0.2],
     ['What was that?', 0.3],
     ['Of course. I understand.', 0.8],
@@ -27,6 +28,7 @@
   var dia1 = 'Oh...it\'s good to see you. I have a secret, something I\'ve been meaning to tell you. You see...';
   var dia2 = 'W-wait, even after all these years...you still remember my birthday?'
   var theEnd = 'THE END.'
+  var diaError = 'No... must have imagined it. Everyone has gone home and you are all alone on campus.\nMaybe you can catch ' + firstName + ' tomorrow?\n' + theEnd;
   var diaGoodEnd = 'Thanks ' + userFirstName + '...You know, ever since that time...I\'ve always liked you...\n' + theEnd;
   var diaBadEnd = 'Thanks ' + userFirstName + '. I\'m so happy for all the time we\'ve spent together...as good friends.\n' + theEnd;
 
@@ -46,16 +48,19 @@
         break;
 
       case 1:
-        showName(friendName);
-        showPhoto();
-        loadDialogue(dia1, [['What?', 0]]);
+        if (!canBabble) {
+          loadDialogue(diaError, []);
+        } else {
+          showName(friendName);
+          showPhoto();
+          loadDialogue(dia1, [['What?', 0]]);
+        }
         break;
 
       case 5:
         $.get('/birthday', function (data) {
-          console.log(data['birthday']);
-          if (data['birthday']) {
-            loadDialogue(dia2, [['Of course. It\'s ' + birthday, 1.0]]);
+          if (data.birthday) {
+            loadDialogue(dia2, [['Of course. It\'s ' + data.birthday, 1.0]]);
           } else {
             babble();
           }
@@ -116,7 +121,8 @@
         gameOver = true;
         affection = 1.0;
       }
-    }     
+    }
+
     var width = $('#affection').width();
     var newWidth = Math.floor(width * affection);
     $('#bar').animate({
@@ -165,10 +171,28 @@
       callback: showResponses
     });
   }
-    
+
   function babble() {
-    $.get('/babble', function (data) {
-      loadDialogue(data['babble'], chooseResponses());
+    $.get('/babble', function(data) {
+      loadDialogue(data.babble, chooseResponses());
+    });
+  }
+
+  function init() {
+    updateBackground();
+
+    // Test babbling to make sure everything works
+    $.get('/babble?limit=1', function(data) {
+      if (data.error) {
+        // Redirect to login page in case access token expired
+        window.location.assign(root_url + 'logout');
+        return;
+      } else if (!data.babble) {
+        // babble is empty!
+        canBabble = false;
+      }
+
+      playScene(0);
     });
   }
 
@@ -180,8 +204,5 @@
     $('body').height(height);
   }
 
-  $(document).ready(function() {
-    updateBackground();
-    playScene(0);
-  });
+  $(document).ready(init);
 })();

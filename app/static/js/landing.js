@@ -1,8 +1,13 @@
 (function() {
   function findFriends() {
-    $.get('/friends', function (data) {
-      console.log(data);
-      if (data && data.friends.length > 0) {
+    $.get('/friends', function(data) {
+      if (data.error) {
+        // Redirect to login page in case access token expired
+        window.location.assign(root_url + 'logout');
+        return;
+      }
+
+      if (data.friends) {
         $('#friends-box').show();
 
         var friendsList = $('#friends');
@@ -20,7 +25,37 @@
     var name = $('<div/>').text(friend.name).appendTo(ahref);
   }
 
+  function checkPermissions() {
+    $('#relogin').click(function(e) {
+      e.preventDefault();
+      FB.login(function(response) {
+          window.location = window.location; // refresh
+      }, {
+        scope: 'user_posts',
+        auth_type: 'rerequest'
+      });
+    });
+
+    $.get('/permissions', function(data) {
+      if (data.error) {
+        // Redirect to login page in case access token expired
+        window.location.assign(root_url + 'logout');
+        return;
+      }
+
+      console.log(data);
+      var permissions = data.permissions.data;
+      for (var i = 0; i < permissions.length; i++) {
+        if (permissions[i].permission === 'user_posts' && permissions[i].status === 'declined') {
+          $('#dating-info').hide();
+          $('#dating-error').show();
+        }
+      }
+    });
+  }
+
   $(document).ready(function() {
+    checkPermissions();
     findFriends();
   });
 })();
