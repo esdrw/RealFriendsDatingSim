@@ -3,7 +3,7 @@
     $.get('/friends', function(data) {
       if (data.error) {
         // Redirect to login page in case access token expired
-        window.location.assign(root_url + 'login');
+        window.location.assign(root_url + 'logout');
         return;
       }
 
@@ -39,7 +39,7 @@
     $.get('/permissions', function(data) {
       if (data.error) {
         // Redirect to login page in case access token expired
-        window.location.assign(root_url + 'login');
+        window.location.assign(root_url + 'logout');
         return;
       }
 

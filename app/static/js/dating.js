@@ -183,7 +183,7 @@
     $.get('/babble', function(data) {
       if (data.error) {
         // Redirect to login page in case access token expired
-        window.location.assign(root_url + 'login');
+        window.location.assign(root_url + 'logout');
         return;
       } else if (!data.babble) {
         // babble is empty!

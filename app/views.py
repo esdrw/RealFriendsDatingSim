@@ -81,7 +81,7 @@ def date_friend(friendId=None):
 def gen_babble():
     access_token = session.get('access_token', None)
     if not access_token:
-        return jsonify(babble=None)
+        return jsonify(babble=None, error="Missing access token.")
 
     try:
         graph = GraphAPI(access_token)
@@ -104,7 +104,7 @@ def get_birthday():
 def get_permissions():
     access_token = session.get('access_token', None)
     if not access_token:
-        return jsonify(permissions=None)
+        return jsonify(permissions=None, error="Missing access token.")
 
     try:
         graph = GraphAPI(access_token)
@@ -120,7 +120,7 @@ def get_permissions():
 def get_friends():
     access_token = session.get('access_token', None)
     if not access_token:
-        return jsonify(friends=None)
+        return jsonify(friends=None, error="Missing access token.")
 
     try:
         graph = GraphAPI(access_token)
@@ -154,7 +154,7 @@ def get_current_user():
 
     # Set the user in the session dictionary as a global g.user and bail out
     # of this function early.
-    if session.get('user'):
+    if session.get('user') and session.get('access_token'):
         g.user = session.get('user')
         return
 
@@ -179,10 +179,6 @@ def get_current_user():
     # Set the user as a global g.user
     g.user = session.get('user', None)
 
-
-# TODO: check if people decline post permission
-def checkDeclinedPermissions():
-    user = session.get('user')
 
 def profileToDict(profile):
     return dict(name=profile['name'],
