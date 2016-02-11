@@ -46,13 +46,17 @@ ul {
 .circle-image {
   width: 200px;
   height: 200px;
-  border-radius: 100px;
+  border-radius: 50%;
+  background-position: center center;
+  background-size: cover;
 }
 
 .circle-image-head {
   position: absolute;
-  left: 25px;
-  top: -175px;
+  left: 55px;
+  top: -125px;
+  width: 120px;
+  height: 120px;
 }
 
 .anime-torso {
