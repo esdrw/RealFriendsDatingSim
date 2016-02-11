@@ -80,13 +80,13 @@ def date_friend(friendId=None):
 @login_required
 def gen_babble():
     limit = request.args.get('limit') or REQUEST_LIMIT
+    friendId = request.args.get('id') or session['friend']['id']
     access_token = session.get('access_token', None)
     if not access_token:
         return jsonify(babble=None, error="Missing access token.")
 
     try:
         graph = GraphAPI(access_token)
-        friendId = session['friend']['id']
         posts = graph.get_connections(id=friendId, connection_name='posts', limit=limit)
     except GraphAPIError as e:
         return jsonify(babble=None, error=e.result)

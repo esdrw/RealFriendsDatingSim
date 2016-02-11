@@ -173,7 +173,7 @@
   }
 
   function babble() {
-    $.get('/babble', function(data) {
+    $.get('/babble?id=' + friendId, function(data) {
       loadDialogue(data.babble, chooseResponses());
     });
   }
@@ -182,7 +182,7 @@
     updateBackground();
 
     // Test babbling to make sure everything works
-    $.get('/babble?limit=1', function(data) {
+    $.get('/babble?limit=1&id=' + friendId, function(data) {
       if (data.error) {
         // Redirect to login page in case access token expired
         window.location.assign(root_url + 'logout');
