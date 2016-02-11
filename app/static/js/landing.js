@@ -43,19 +43,33 @@
         return;
       }
 
-      console.log(data);
       var permissions = data.permissions.data;
+      var permissionError = false;
       for (var i = 0; i < permissions.length; i++) {
         if (permissions[i].permission === 'user_posts' && permissions[i].status === 'declined') {
-          $('#dating-info').hide();
-          $('#dating-error').show();
+          permissionError = true;
+          break;
         }
+      }
+
+      if (permissionError) {
+        $('#dating-info').hide();
+        $('#dating-error1').show();
+      } else {
+        // Test babbling to make sure we can generate text
+        $.get('/babble?limit=1&id=me', function(data) {
+          if (!data.babble) {
+            $('#dating-info').hide();
+            $('#dating-error2').show();
+          } else {
+            findFriends();
+          }
+        });
       }
     });
   }
 
   $(document).ready(function() {
     checkPermissions();
-    findFriends();
   });
 })();
