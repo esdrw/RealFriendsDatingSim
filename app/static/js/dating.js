@@ -11,7 +11,7 @@
     ['Sorry.', 0.9],
     [firstName+'-Senpai!', 1.0],
     ['I’ll beat him up for you.', 1.0],
-    ['Er…', 0.5],
+    ['Er...', 0.5],
     ['Happy birthday.', 0.8],
     ['But I\'m already taken', 0.2],
     ['What was that?', 0.3],
@@ -22,19 +22,38 @@
     ['I got lost in your eyes.', 0.8]
   ];
 
-  var maxAffectionIncr = 0.3;
+  var maxAffectionIncr = 0.25;
 
   var intro = 'It\'s an unusually nice day at Carnegie Mellon University. You\'ve just finished your classes and are ready to head home when you hear the quiet sound of footsteps.';
   var dia1 = 'Oh...it\'s good to see you. I have a secret, something I\'ve been meaning to tell you. You see...';
-  var dia2 = 'W-wait, even after all these years...you still remember my birthday?'
+  var dia2 = 'W-wait, even after all these years... you still remember my birthday?'
   var theEnd = 'THE END.'
-  var diaError = 'No... must have imagined it. Everyone has gone home and you are all alone on campus.\nMaybe you can catch ' + firstName + ' tomorrow?\n' + theEnd;
-  var diaGoodEnd = 'Thanks ' + userFirstName + '...You know, ever since that time...I\'ve always liked you...\n' + theEnd;
-  var diaBadEnd = 'Thanks ' + userFirstName + '. I\'m so happy for all the time we\'ve spent together...as good friends.\n' + theEnd;
+  var diaError = 'No... must have imagined it. Everyone has gone home and you are all alone on campus.<br/>Maybe you can catch ' + firstName + ' tomorrow?<br/>' + theEnd;
+  var diaGoodEnd = 'Thanks ' + userFirstName + '. You know, ever since that time... ^1000 I\'ve always liked you...<br/><br/>' + theEnd;
+  var diaBadEnd = 'Thanks ' + userFirstName + '. I\'m so happy for all the time we\'ve spent together... ^1000 as good friends.<br/><br/>' + theEnd;
 
-  var affection = 0.0;
+  var affection = 0.2;
   var progress = 0;
   var replies;
+
+  function shuffle(array) {
+    var temp, randomIndex, currentIndex = array.length;
+
+    // While there remain elements to shuffle...
+    while (0 !== currentIndex) {
+
+      // Pick a remaining element...
+      randomIndex = Math.floor(Math.random() * currentIndex);
+      currentIndex -= 1;
+
+      // And swap it with the current element.
+      temp = array[currentIndex];
+      array[currentIndex] = array[randomIndex];
+      array[randomIndex] = temp;
+    }
+
+    return array;
+  }
 
   function checkBirthday(birthday) {
     // Check if birthday is of format "MM/DD/YYYY"
@@ -60,12 +79,12 @@
     var option4 = new Date(birthday);
     option4.setMonth((option4.getMonth() + Math.floor(Math.random() * 11 - 5)) % 12);
     option4.setDate((option4.getDate() + Math.floor(Math.random() * 11 - 5)) % 28);
-    return [
+    return shuffle([
       ['Of course. It\'s ' + getDateString(option1), 1.0],
       ['Of course. It\'s ' + getDateString(option2), 0],
       ['Of course. It\'s ' + getDateString(option3), 0],
       ['Of course. It\'s ' + getDateString(option4), 0]
-    ];
+    ]);
   }
 
   function playScene(num) {
@@ -86,7 +105,7 @@
         } else {
           showName(friendName);
           showPhoto();
-          loadDialogue(dia1, [['What?', 0]]);
+          loadDialogue(dia1, [['What is it?', 0]]);
         }
         break;
 
@@ -201,7 +220,7 @@
       strings: [text],
       typeSpeed: 0,
       showCursor: false,
-      contentType: 'text',
+      contentType: 'html',
       callback: showResponses
     });
   }

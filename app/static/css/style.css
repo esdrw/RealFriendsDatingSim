@@ -123,6 +123,16 @@ ul {
   -ms-user-select: none;       /* IE/Edge */
 }
 
+#dialogue-box li {
+  font-style: italic;
+}
+
+#dialogue-box li:hover {
+  cursor: pointer;
+  font-weight: bold;
+  letter-spacing: 0.1em;
+}
+
 #name-box {
   position: absolute;
   margin-top: -60px;
@@ -154,16 +164,6 @@ ul {
   width: 500px;
   border: 1px solid black;
   color: black;
-}
-
-#dialogue-box li {
-  font-style: italic;
-}
-
-#dialogue-box li:hover {
-  cursor: pointer;
-  font-weight: bold;
-  letter-spacing: 0.1em;
 }
 
 #friends {
