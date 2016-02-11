@@ -32,6 +32,17 @@ def index():
                            app_name=FB_APP_NAME, user=user,
                            root_url=request.url_root)
 
+@app.route('/privacy')
+def get_privacy():
+    return render_template('privacy.html', app_id=FB_APP_ID,
+                           app_name=FB_APP_NAME,
+                           root_url=request.url_root)
+
+@app.route('/about')
+def get_about():
+    return render_template('about.html', app_id=FB_APP_ID,
+                           app_name=FB_APP_NAME,
+                           root_url=request.url_root)
 
 @app.route('/login')
 def login():

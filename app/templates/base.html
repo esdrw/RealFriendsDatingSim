@@ -38,7 +38,7 @@
             });
 
             var login = function(response) {
-                if (response.status === 'connected' && window.location.href === '{{ root_url }}login') {
+                if (response.status === 'connected' && window.location.pathname === '/login') {
                     window.location.assign('{{ root_url }}{{ next|safe }}');
                 }
             };
