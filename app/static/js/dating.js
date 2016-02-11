@@ -35,6 +35,39 @@
   var affection = 0.0;
   var progress = 0;
   var replies;
+
+  function checkBirthday(birthday) {
+    // Check if birthday is of format "MM/DD/YYYY"
+    return (birthday && birthday.split('/').length === 3);
+  }
+
+  function birthdayOptions(birthday) {
+    var monthNames = [
+      "January", "February", "March", "April", "May", "June", "July",
+      "August", "September", "October", "November", "December"
+    ];
+    function getDateString(date) {
+      return monthNames[date.getMonth()] + ' ' + date.getDate().toString() + ', ' + date.getFullYear();
+    }
+
+    var option1 = new Date(birthday);
+    var option2 = new Date(birthday);
+    option2.setMonth((option2.getMonth() + 1) % 12);
+    option2.setDate((option2.getDate() + Math.floor(Math.random() * 11 - 5)) % 28);
+    var option3 = new Date(birthday);
+    option3.setMonth((option3.getMonth() - 1) % 12);
+    option3.setDate((option3.getDate() + Math.floor(Math.random() * 11 - 5)) % 28);
+    var option4 = new Date(birthday);
+    option4.setMonth((option4.getMonth() + Math.floor(Math.random() * 11 - 5)) % 12);
+    option4.setDate((option4.getDate() + Math.floor(Math.random() * 11 - 5)) % 28);
+    return [
+      ['Of course. It\'s ' + getDateString(option1), 1.0],
+      ['Of course. It\'s ' + getDateString(option2), 0],
+      ['Of course. It\'s ' + getDateString(option3), 0],
+      ['Of course. It\'s ' + getDateString(option4), 0]
+    ];
+  }
+
   function playScene(num) {
     if (gameOver) {
       num = 10;
@@ -57,10 +90,10 @@
         }
         break;
 
-      case 5:
-        $.get('/birthday', function (data) {
-          if (data.birthday) {
-            loadDialogue(dia2, [['Of course. It\'s ' + data.birthday, 1.0]]);
+      case 9:
+        $.get('/birthday', function(data) {
+          if (checkBirthday(data.birthday)) {
+            loadDialogue(dia2, birthdayOptions(data.birthday));
           } else {
             babble();
           }
@@ -77,6 +110,7 @@
 
       default:
         babble();
+        break;
     }
   }
 
@@ -117,7 +151,7 @@
       }
     } else {
       affection += incr;
-      if (affection > 1.0) {
+      if (affection >= 1.0) {
         gameOver = true;
         affection = 1.0;
       }
