@@ -57,7 +57,7 @@
         $('#dating-error1').show();
       } else {
         // Test babbling to make sure we can generate text
-        $.get('/babble?limit=1&id=me', function(data) {
+        $.get('/babble?limit=5&id=me', function(data) {
           if (!data.babble) {
             $('#dating-info').hide();
             $('#dating-error2').show();
