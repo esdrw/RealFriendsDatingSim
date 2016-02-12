@@ -98,7 +98,7 @@ def gen_babble():
 
     try:
         graph = GraphAPI(access_token)
-        posts = graph.get_connections(id=friendId, connection_name='posts', limit=limit)
+        posts = graph.get_connections(id=friendId, connection_name='posts', fields='message', limit=limit)
     except GraphAPIError as e:
         return jsonify(babble=None, error=e.result)
 
@@ -142,7 +142,7 @@ def get_friends():
 
     # TODO: replace with query to Firebase on whether friend can babble
     def can_babble(fid):
-        return bool(graph.get_connections(id=fid, connection_name='posts', limit=1)['data'])
+        return bool(graph.get_connections(id=fid, connection_name='posts', fields='message', limit=5)['data'])
 
     friends = [f for f in profiles['data'] if can_babble(f['id'])]
 

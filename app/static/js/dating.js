@@ -235,7 +235,7 @@
     updateBackground();
 
     // Test babbling to make sure everything works
-    $.get('/babble?limit=1&id=' + friendId, function(data) {
+    $.get('/babble?limit=5&id=' + friendId, function(data) {
       if (data.error) {
         // Redirect to login page in case access token expired
         window.location.assign(root_url + 'logout');
