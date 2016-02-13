@@ -1,28 +1,25 @@
 (function() {
   var firstName = friendName.substring(0, friendName.indexOf(' '));
   var userFirstName = userName.substring(0, userName.indexOf(' '));
-  var gameOver = false;
   var canBabble = true;
 
   // Response and probability of increasing affection.
   var responses = [
-    ['Will you marry me?', 0.2],
-    ['Really?', 0.5],
-    ['Sorry.', 0.9],
-    [firstName+'-Senpai!', 1.0],
-    ['I’ll beat him up for you.', 1.0],
-    ['Er...', 0.5],
-    ['Happy birthday.', 0.8],
-    ['But I\'m already taken', 0.2],
-    ['What was that?', 0.3],
-    ['Of course. I understand.', 0.8],
-    ['Wait!', 0.7],
-    ['Since I\'ve set my eyes on you, I\'ve always known.', 0.8],
-    ['I\'ve only used 0.01\% of my charm!', 0.5],
-    ['I got lost in your eyes.', 0.8]
+    ['Will you marry me?', 0.2, -0.1, 0.4],
+    ['Really?', 0.1, -0.1, 0.8],
+    ['Sorry.', 0.1, -0.1, 0.8],
+    [firstName+'-Senpai!', 0.2, -0.1, 0.7],
+    ['I’ll beat him up for you.', 0.15, -0.1, 0.8],
+    ['Er...', 0.1, -0.1, 0.4],
+    ['Happy birthday.', 0.1, -0.1, 0.7],
+    ['But I\'m already taken.', 0.1, -0.1, 0.1],
+    ['What was that?', 0.1, -0.1, 0.5],
+    ['Of course. I understand.', 0.1, -0.1, 0.8],
+    ['Wait!', 0.1, -0.1, 0.8],
+    ['Since I\'ve set my eyes on you, I\'ve always known.', 0.2, -0.1, 0.8],
+    ['I\'ve only used 0.01\% of my charm!', 0.1, -0.1, 0.6],
+    ['I got lost in your eyes.', 0.15, -0.1, 0.65]
   ];
-
-  var maxAffectionIncr = 0.25;
 
   var intro = 'It\'s an unusually nice day at Carnegie Mellon University. You\'ve just finished your classes and are ready to head home when you hear the quiet sound of footsteps.';
   var dia1 = 'Oh...it\'s good to see you. I have a secret, something I\'ve been meaning to tell you. You see...';
@@ -80,39 +77,36 @@
     option4.setMonth((option4.getMonth() + Math.floor(Math.random() * 11 - 5)) % 12);
     option4.setDate((option4.getDate() + Math.floor(Math.random() * 11 - 5)) % 28);
     return shuffle([
-      ['Of course. It\'s ' + getDateString(option1), 1.0],
-      ['Of course. It\'s ' + getDateString(option2), 0],
-      ['Of course. It\'s ' + getDateString(option3), 0],
-      ['Of course. It\'s ' + getDateString(option4), 0]
+      ['Of course. It\'s ' + getDateString(option1), 0.2, 0, 1],
+      ['Of course. It\'s ' + getDateString(option2), 0, -0.2, 0],
+      ['Of course. It\'s ' + getDateString(option3), 0, -0.2, 0],
+      ['Of course. It\'s ' + getDateString(option4), 0, -0.2, 0]
     ]);
   }
 
+  var GAME_OVER = 9;
   function playScene(num) {
-    if (gameOver) {
-      num = 10;
-    }
-
     switch (num) {
       case 0:
         hideName();
         hidePhoto();
-        loadDialogue(intro, [['...' + firstName + '? Is that you?', 0]]);
+        loadDialogue(intro, [['...' + firstName + '? Is that you?', 0, 0, 1]], false);
         break;
 
       case 1:
         if (!canBabble) {
-          loadDialogue(diaError, []);
+          loadDialogue(diaError, [], true);
         } else {
           showName(friendName);
           showPhoto();
-          loadDialogue(dia1, [['What is it?', 0]]);
+          loadDialogue(dia1, [['What is it?', 0, 0, 1]], false);
         }
         break;
 
       case 9:
         $.get('/birthday', function(data) {
           if (checkBirthday(data.birthday)) {
-            loadDialogue(dia2, birthdayOptions(data.birthday));
+            loadDialogue(dia2, birthdayOptions(data.birthday), false);
           } else {
             babble();
           }
@@ -121,9 +115,9 @@
 
       case 10:
         if (affection >= 0.8) {
-          loadDialogue(diaGoodEnd, []);
+          loadDialogue(diaGoodEnd, [], true);
         } else {
-          loadDialogue(diaBadEnd, []);
+          loadDialogue(diaBadEnd, [], true);
         }
         break;
 
@@ -133,11 +127,10 @@
     }
   }
 
-  function selectChoice(prob) {
-    updateAffection(prob);
+  function selectChoice(e) {
+    updateAffection(e.data);
     clearDialogue();
-    progress++;
-    playScene(progress);
+    playScene(++progress);
     return false;
   }
 
@@ -161,19 +154,14 @@
   }
 
   var intervalId;
-  function updateAffection(prob) {
-    var incr = Math.random() * maxAffectionIncr;
-    if (Math.random() > prob.data.prob) {
-      if (affection > incr) {
-        incr = incr * -1;
-        affection += incr;
+  function updateAffection(data) {
+    if (Math.random() < data.prob) {
+      affection = Math.min(affection + data.affUp, 1.0);
+      if (affection == 1.0) {
+        progress = GAME_OVER;
       }
     } else {
-      affection += incr;
-      if (affection >= 1.0) {
-        gameOver = true;
-        affection = 1.0;
-      }
+      affection = Math.max(affection + data.affDown, 0);
     }
 
     var width = $('#affection').width();
@@ -207,27 +195,31 @@
     $.each(replies, function(i) {
       var li = $('<li/>').appendTo(responseList);
       var ahref = $('<a/>')
-        .on('click', { prob: replies[i][1] }, selectChoice)
+        .on('click', {
+          affUp: replies[i][1],
+          affDown: replies[i][2],
+          prob: replies[i][3]
+        }, selectChoice)
         .text(replies[i][0])
         .appendTo(li);
       });
     $('#dialogue-box').append(responseList);
   }
 
-  function loadDialogue(text, resp) {
+  function loadDialogue(text, resp, html) {
     replies = resp;
     $('#dialogue').typed({
       strings: [text],
       typeSpeed: 0,
       showCursor: false,
-      contentType: 'html',
+      contentType: html ? 'html' : 'text',
       callback: showResponses
     });
   }
 
   function babble() {
     $.get('/babble?id=' + friendId, function(data) {
-      loadDialogue(data.babble, chooseResponses());
+      loadDialogue(data.babble, chooseResponses(), false);
     });
   }
 
