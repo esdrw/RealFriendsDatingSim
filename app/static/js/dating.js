@@ -53,17 +53,20 @@
   }
 
   function checkBirthday(birthday) {
-    // Check if birthday is of format "MM/DD/YYYY"
-    return (birthday && birthday.split('/').length === 3);
+    // Check if birthday is of format "MM/DD/YYYY" or "MM/DD"
+    return (birthday && birthday.split('/').length >= 2);
   }
 
   function birthdayOptions(birthday) {
+    var showYear = birthday.split('/').length === 3;
     var monthNames = [
       "January", "February", "March", "April", "May", "June", "July",
       "August", "September", "October", "November", "December"
     ];
+
     function getDateString(date) {
-      return monthNames[date.getMonth()] + ' ' + date.getDate().toString() + ', ' + date.getFullYear();
+      return (monthNames[date.getMonth()] + ' ' + date.getDate().toString()) +
+        (showYear ? ', ' + date.getFullYear() : '');
     }
 
     var option1 = new Date(birthday);
