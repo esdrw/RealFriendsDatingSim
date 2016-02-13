@@ -115,12 +115,6 @@ ul {
   border-style: groove;
   border-color: #ff3399;
   border-width: 30px;
-
-  -webkit-touch-callout: none; /* iOS Safari */
-  -webkit-user-select: none;   /* Chrome/Safari/Opera */
-  -khtml-user-select: none;    /* Konqueror */
-  -moz-user-select: none;      /* Firefox */
-  -ms-user-select: none;       /* IE/Edge */
 }
 
 #dialogue-box li {
