@@ -9,6 +9,8 @@ FB_APP_ID = '1561303244188583'
 FB_APP_NAME = 'Kawaii Tomodachi-desu'
 FB_APP_SECRET = '51026d49c3cf27a091d502b1f8ef0698'
 
+FB_USERAGENT_BOT = 'facebookexternalhit/1.1'
+
 PROFILE_FIELDS = 'id,name,first_name,gender,birthday,link'
 
 # Max number of objects to return from FB query
@@ -18,7 +20,7 @@ REQUEST_LIMIT = 100
 def login_required(f):
     @wraps(f)
     def decorated_function(*args, **kwargs):
-        if g.user is None:
+        if g.user is None and FB_USERAGENT_BOT not in request.headers.get('User-Agent'):
             return redirect(url_for('login', next=request.path))
         return f(*args, **kwargs)
     return decorated_function
