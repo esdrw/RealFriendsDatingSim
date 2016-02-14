@@ -48,7 +48,12 @@
                 }
             };
 
-            FB.Event.subscribe('auth.login', login);
+            FB.Event.subscribe('auth.login', function() {
+                if (window.location.pathname === '/login') {
+                    window.location.assign('{{ root_url }}{{ next|safe }}');
+                }
+            });
+
             FB.Event.subscribe('auth.authResponseChange', login);
         };
 
