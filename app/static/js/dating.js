@@ -21,7 +21,7 @@
     ['I got lost in your eyes.', 0.15, -0.1, 0.65]
   ];
 
-  var intro = 'It\'s an unusually nice day at Carnegie Mellon University. You\'ve just finished your classes and are ready to head home when you hear the quiet sound of footsteps.';
+  var intro = 'It\'s an unusually nice day at Kawaii Tomodachi University. You\'ve just finished your classes and are ready to head home when you hear the quiet sound of footsteps.';
   var dia1 = 'Oh...it\'s good to see you. I have a secret, something I\'ve been meaning to tell you. You see...';
   var dia2 = 'W-wait, even after all these years... you still remember my birthday?'
   var theEnd = 'THE END.'

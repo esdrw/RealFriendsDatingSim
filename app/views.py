@@ -132,21 +132,19 @@ def get_permissions():
 @app.route('/friends', methods=['GET'])
 @login_required
 def get_friends():
+    # TODO: paginate friends
     access_token = session.get('access_token', None)
     if not access_token:
         return jsonify(friends=None, error="Missing access token.")
 
     try:
         graph = GraphAPI(access_token)
-        profiles = graph.get_connections(id='me', connection_name='friends')
+        profiles = graph.get_connections(id='me', connection_name='friends', limit=REQUEST_LIMIT)
     except GraphAPIError as e:
         return jsonify(friends=None, error=e.result)
 
-    # TODO: replace with query to Firebase on whether friend can babble
-    def can_babble(fid):
-        return bool(graph.get_connections(id=fid, connection_name='posts', fields='message', limit=5)['data'])
-
-    friends = [f for f in profiles['data'] if can_babble(f['id'])]
+    # TODO: include privacy filters?
+    friends = profiles['data']
 
     if not friends:
         # you have no friends :(
